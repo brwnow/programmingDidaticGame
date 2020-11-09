@@ -5,5 +5,7 @@ REM Compiler within bin folder of your toolchain to be called for
 REM compliing and linking the project
 set C_COMPILER=
 
-REM Path to your installation of SDL2 lib containing bin, include and lib folders
+REM Path to your installation of SDL2 and SDL2_ttf extension libs
+REM containing bin, include and lib folders
 set LIBSDL_PATH=
+set LIBSDLTTF_PATH=
