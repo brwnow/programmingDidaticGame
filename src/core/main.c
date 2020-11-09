@@ -26,13 +26,19 @@ int main(int argc, char *argv[]) {
     }
 
     TTF_Font *font = TTF_OpenFont("res/fonts/AlexBrush-Regular.ttf", 80);
+    TTF_Font *font2 = TTF_OpenFont("res/fonts/SEASRN__.ttf", 32);
     SDL_Surface *fontSurface = NULL;
+    SDL_Surface *exitMsg = NULL;
     SDL_Color fontColor = {145, 242, 145, 255};
+    SDL_Color fontColor2 = {242, 145, 145, 255};
 
-    if(font != NULL)
+    if(font != NULL) {
         fontSurface = TTF_RenderText_Blended(font, "Eu sou o que eu quero ser!", fontColor);
+        exitMsg = TTF_RenderText_Blended(font2, "! PRESSIONE ESC PARA SAIR !", fontColor2);
+    }
 
     TTF_CloseFont(font);
+    TTF_CloseFont(font2);
     font = NULL;
 
     SDL_Surface *screen = windowGetScreen();
@@ -40,17 +46,24 @@ int main(int argc, char *argv[]) {
     while(isKeyPressed(SDL_SCANCODE_ESCAPE) == false) {
         SDL_PumpEvents();
 
-        if(screen != NULL && fontSurface != NULL) {
+        if(screen != NULL && fontSurface != NULL && exitMsg != NULL) {
             int screenWidth = screen->w;
             int screenHeight = screen->h;
             int fontSurfWidth = fontSurface->w;
             int fontSurfHeigth = fontSurface->h;
+            int exitMsgWidth = exitMsg->w;
+            int exitMsgHeigth = exitMsg->h;
             SDL_Rect destRect = {   (screenWidth - fontSurfWidth) / 2,
                                     (screenHeight - fontSurfHeigth) / 2,
                                     fontSurfWidth,
                                     fontSurfHeigth };
+            SDL_Rect destExitMsgRect = {(screenWidth - exitMsgWidth) / 2,
+                                        screenHeight * 75 / 100,
+                                        exitMsgWidth,
+                                        exitMsgHeigth };
 
             SDL_BlitSurface(fontSurface, &(fontSurface->clip_rect), screen, &destRect);
+            SDL_BlitSurface(exitMsg, &(exitMsg->clip_rect), screen, &destExitMsgRect);
         }
 
         windowFlipPage();
@@ -59,8 +72,10 @@ int main(int argc, char *argv[]) {
     }
 
     SDL_FreeSurface(fontSurface);
+    SDL_FreeSurface(exitMsg);
     SDL_FreeSurface(screen);
     fontSurface = NULL;
+    exitMsg = NULL;
     screen = NULL;
 
     TTF_Quit();
