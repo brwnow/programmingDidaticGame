@@ -96,6 +96,7 @@ void appEnd(void) {
     logInfo("Stopping application");
 
     keyboardEnd();
+    eventsEnd();
     videoEnd();
     SDL_Quit();
 }
