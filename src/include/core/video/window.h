@@ -11,4 +11,7 @@ void windowClose(void);
 bool windowIsStarted(void);
 
 SDL_Surface* windowGetScreen(void);
+
+void windowFlipPage(void);
+
 #endif // _DIDATIC_GAME_VIDEO_WINDOW_H_

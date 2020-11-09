@@ -55,4 +55,11 @@ SDL_Surface* windowGetScreen(void) {
         return NULL;
     }
 }
+
+void windowFlipPage(void) {
+    if(gameWindow != NULL) {
+        SDL_UpdateWindowSurface(gameWindow);
+    } else {
+        logDebug("Failed flipping page. Window is not initialized");
+    }
 }
