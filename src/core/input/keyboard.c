@@ -16,7 +16,7 @@ static SDL_mutex *keysStateMutex = NULL;
 
 static void setKeyState(unsigned scancode, bool state) {
     if(keysStateMutex == NULL) {
-        logError("Error while setting state for key %d because its mutex is NULL - reason: %s", scancode, SDL_GetError());
+        logError("Error while setting state for key %d because its mutex is NULL", scancode);
 
         return;
     }
@@ -45,6 +45,7 @@ static int keyboardInputListener(void *data, SDL_Event *event) {
         }
     }
 
+    // This is expected by SDL event manager to process internally this event
     return 1;
 }
 
