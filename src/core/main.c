@@ -16,9 +16,6 @@ int main(int argc, char *argv[]) {
     if(appInit() == false)
         return 0;
 
-    if(keyboardInit() == false)
-        return 0;
-
     if(windowStartup("Breno Game", 800, 600) == false)
         return 0;
 
@@ -68,7 +65,6 @@ int main(int argc, char *argv[]) {
 
     TTF_Quit();
     windowClose();
-    keyboardEnd();
     appEnd();
 
     return 0;
@@ -87,6 +83,8 @@ bool appInit(void) {
         return false;
     } else if(eventsInit() == false) {
         return false;
+    } else if(keyboardInit() == false) {
+        return false;
     } else {
         logInfo("Application succesfully initialized");
 
@@ -97,6 +95,7 @@ bool appInit(void) {
 void appEnd(void) {
     logInfo("Stopping application");
 
+    keyboardEnd();
     videoEnd();
     SDL_Quit();
 }
