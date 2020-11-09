@@ -1,7 +1,5 @@
 #include "core/video/window.h"
 
-#include <SDL.h>
-
 #include "utils/log.h"
 
 // ===============
@@ -38,4 +36,23 @@ void windowClose(void) {
 
 bool windowIsStarted(void) {
     return gameWindow != NULL;
+}
+
+SDL_Surface* windowGetScreen(void) {
+    if(gameWindow != NULL) {
+        SDL_Surface *windowSurface = SDL_GetWindowSurface(gameWindow);
+
+        if(windowSurface != NULL) {
+            return windowSurface;
+        } else {
+            logError("Failed getting window surface - reason: %s", SDL_GetError());
+
+            return NULL;
+        }
+    } else {
+        logDebug("Failed getting window screen. Window is not initialized");
+
+        return NULL;
+    }
+}
 }
