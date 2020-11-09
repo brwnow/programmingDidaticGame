@@ -19,7 +19,8 @@ REM Build cleanup
 rmdir /S /Q build\%BUILD_MODE%
 mkdir build\%BUILD_MODE%
 
-echo Building starting
+echo Build starting
+echo ----------------------------------------
 echo build target: %BUILD_MODE%
 echo compiler flags: %BUILD_COMPILE_FLAGS%
 echo linking flags: %BUILD_LINKING_FLAGS%
@@ -45,10 +46,8 @@ mkdir install\%BUILD_MODE%\res\fonts
 REM Installing
 REM Moving build binary and needed libraries
 copy /B /Y %LIBSDL_PATH%\bin\SDL2.dll install\%BUILD_MODE%
-copy /B /Y %LIBSDLTTF_PATH%\bin\SDL2_ttf.dll install\%BUILD_MODE%
-copy /B /Y %LIBSDLTTF_PATH%\bin\libfreetype-6.dll install\%BUILD_MODE%
-copy /B /Y %LIBSDLTTF_PATH%\bin\zlib1.dll install\%BUILD_MODE%
+copy /B /Y %LIBSDLTTF_PATH%\bin\*.dll install\%BUILD_MODE%
 copy /B /Y build\%BUILD_MODE%\brenoGame.exe install\%BUILD_MODE%
 
 REM Moving resources files
-copy /B /Y resources\fonts\AlexBrush-Regular.ttf install\%BUILD_MODE%\res\fonts
+copy /B /Y resources\fonts\*.ttf install\%BUILD_MODE%\res\fonts
