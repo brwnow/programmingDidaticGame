@@ -9,7 +9,8 @@
 // PRIVATE SECTION
 // ===============
 
-// Array that holds the state of each possible key. A given index i representes
+// Array that holds the state of each possible key. A given index i represents
+
 // the key with keycode i. True means key pressed and false means key is not pressed
 static volatile bool keysState[SDL_NUM_SCANCODES];
 static SDL_mutex *keysStateMutex = NULL;
