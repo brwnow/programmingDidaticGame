@@ -42,7 +42,7 @@ static int keyboardInputListener(void *data, SDL_Event *event) {
         logVerbose("Key event captured | event type %u | key scancode %d", eventType, keyEvent->keysym.scancode);
 
         if(keyEvent->repeat == 0) {
-            setKeyState(keyEvent->keysym.scancode, bool_cast(eventType == SDL_KEYDOWN));
+            setKeyState(keyEvent->keysym.scancode, eventType == SDL_KEYDOWN);
         }
     }
 
