@@ -4,3 +4,6 @@ install
 
 ## External libs
 libs
+
+## Local configuration files
+build_config.bat
