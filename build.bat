@@ -1,7 +1,27 @@
 @ECHO OFF
 
+set BUILD_CFG_FILE=build_config.bat
+
 REM Setting up local build configurations
-CALL build_config.bat
+IF EXIST %BUILD_CFG_FILE% (
+    CALL %BUILD_CFG_FILE%
+) ELSE (
+    REM Creating build config file because it was not found
+    ECHO REM Path to bin folder of your toolchain>> %BUILD_CFG_FILE%
+    ECHO set TOOLCHAIN_PATH=>> %BUILD_CFG_FILE%
+    ECHO.>> %BUILD_CFG_FILE%
+    ECHO REM Compiler within bin folder of your toolchain to be called for>> %BUILD_CFG_FILE%
+    ECHO REM compliing and linking the project>> %BUILD_CFG_FILE%
+    ECHO set C_COMPILER=>> %BUILD_CFG_FILE%
+    ECHO.>> %BUILD_CFG_FILE%
+    ECHO REM Path to your installation of SDL2 and SDL2_ttf extension libs>> %BUILD_CFG_FILE%
+    ECHO REM containing bin, include and lib folders>> %BUILD_CFG_FILE%
+    ECHO set LIBSDL_PATH=>> %BUILD_CFG_FILE%
+    ECHO set LIBSDLTTF_PATH=>> %BUILD_CFG_FILE%
+
+    ECHO %BUILD_CFG_FILE% created. Fill up the file envs and build again
+    EXIT /B
+)
 
 REM Setting up build configurations
 set BUILD_COMPILE_FLAGS=-O2
