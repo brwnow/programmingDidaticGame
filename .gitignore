@@ -8,5 +8,5 @@ libs
 ## Local configuration files
 build_config.bat
 
-##Local vscode settings dir
+## Local vscode settings dir
 .vscode/*
