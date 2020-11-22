@@ -23,6 +23,9 @@ IF EXIST %BUILD_CFG_FILE% (
     EXIT /B
 )
 
+REM Setting up PATH to avoid missing .dll while running gcc.exe
+set PATH=%PATH%;%TOOLCHAIN_PATH%
+
 REM Setting up build configurations
 set BUILD_COMPILE_FLAGS=-O2
 set BUILD_LINKING_FLAGS=-mwindows
