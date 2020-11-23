@@ -39,7 +39,10 @@ IF /I "%BUILD_MODE%" == "debug" (
 )
 
 REM Build cleanup
-rmdir /S /Q build\%BUILD_MODE%
+IF EXIST build\%BUILD_MODE% (
+    rmdir /S /Q build\%BUILD_MODE%
+)
+
 mkdir build\%BUILD_MODE%
 
 echo Build starting
@@ -63,7 +66,10 @@ REM Game binary linking
 %TOOLCHAIN_PATH%\%C_COMPILER% build\%BUILD_MODE%\main.o build\%BUILD_MODE%\log.o build\%BUILD_MODE%\events.o build\%BUILD_MODE%\keyboard.o build\%BUILD_MODE%\video.o build\%BUILD_MODE%\window.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib %BUILD_LINKING_FLAGS% -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\%BUILD_MODE%\brenoGame.exe
 
 REM Tests build cleanup
-rmdir /S /Q build\tests
+IF EXIST build/tests (
+    rmdir /S /Q build\tests
+)
+
 mkdir build\tests
 
 REM Tests building
