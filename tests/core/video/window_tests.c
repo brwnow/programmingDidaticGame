@@ -1,6 +1,7 @@
 #include <munit.h>
+#include <testsdefs.h>
 
-static MunitResult windowGetScreenUninitedVideo(const MunitParameter params[], void* user_data_or_fixture);
+MUNIT_DECLARE_TEST_FUNC(windowGetScreenUninitedVideo);
 
 static MunitTest windowTests[] = {
     {
@@ -24,10 +25,7 @@ static MunitSuite windowTestsSuite = {
     MUNIT_SUITE_OPTION_NONE
 };
 
-static MunitResult windowGetScreenUninitedVideo(const MunitParameter params[], void* user_data_or_fixture) {
-    (void)params;
-    (void)user_data_or_fixture;
-
+MUNIT_DECLARE_TEST_FUNC(windowGetScreenUninitedVideo) {
     return MUNIT_FAIL;
 }
 

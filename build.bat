@@ -78,7 +78,7 @@ REM Tests compilation
 set TEST_COMPILATION_PARAMS=-g -Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17
 %TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\munit.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\window_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c -Imunit -Itests %TEST_COMPILATION_PARAMS% -o build\tests\window_tests.o
 
 REM Tests linking
 %TOOLCHAIN_PATH%\%C_COMPILER% build\tests\main.o build\tests\munit.o build\tests\window_tests.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib -mconsole -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\tests\tests.exe
