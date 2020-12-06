@@ -1,6 +1,6 @@
 #include "core/video/window.h"
 
-#include "utils/log.h"
+#include "utils/log/log.h"
 
 // ===============
 // PRIVATE SECTION

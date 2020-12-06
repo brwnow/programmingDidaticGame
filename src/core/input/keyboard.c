@@ -2,7 +2,7 @@
 
 #include <SDL_mutex.h>
 
-#include "utils/log.h"
+#include "utils/log/log.h"
 #include "core/input/events.h"
 
 // ===============

@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include "utils/log.h"
+#include "utils/log/log.h"
 
 // ===============
 // PRIVATE SECTION
