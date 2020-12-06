@@ -68,7 +68,7 @@ REM Game binary compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\window.o
 
 REM Game binary linking
-%TOOLCHAIN_PATH%\%C_COMPILER% build\%BUILD_MODE%\main.o build\%BUILD_MODE%\log.o build\%BUILD_MODE%\events.o build\%BUILD_MODE%\keyboard.o build\%BUILD_MODE%\video.o build\%BUILD_MODE%\window.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib %BUILD_LINKING_FLAGS% -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\%BUILD_MODE%\brenoGame.exe
+%TOOLCHAIN_PATH%\%C_COMPILER% build\%BUILD_MODE%\main.o build\%BUILD_MODE%\log.o build\%BUILD_MODE%\list.o build\%BUILD_MODE%\events.o build\%BUILD_MODE%\keyboard.o build\%BUILD_MODE%\video.o build\%BUILD_MODE%\window.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib %BUILD_LINKING_FLAGS% -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\%BUILD_MODE%\brenoGame.exe
 
 REM Tests build cleanup
 IF EXIST build/tests (
@@ -81,13 +81,16 @@ REM Tests building
 
 REM Tests compilation
 set TEST_COMPILATION_PARAMS=-g -Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17
+set TEST_COMPILATION_INCLUDE_PATHS=-Itests -Isrc\include
 %TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\munit.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c -Imunit -Itests %TEST_COMPILATION_PARAMS% -o build\tests\window_tests.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c -Imunit -Itests %TEST_COMPILATION_PARAMS% -o build\tests\list_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c %TEST_COMPILATION_INCLUDE_PATHS% -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\window_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c %TEST_COMPILATION_INCLUDE_PATHS% -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\list_tests.o
+
+set BUILD_OBJECTS_NEEDED_BY_TEST=build\%BUILD_MODE%\list.o
 
 REM Tests linking
-%TOOLCHAIN_PATH%\%C_COMPILER% build\tests\main.o build\tests\munit.o build\tests\window_tests.o build\tests\list_tests.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib -mconsole -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\tests\tests.exe
+%TOOLCHAIN_PATH%\%C_COMPILER% build\tests\main.o build\tests\munit.o build\tests\window_tests.o build\tests\list_tests.o %BUILD_OBJECTS_NEEDED_BY_TEST% -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib -mconsole -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\tests\tests.exe
 
 REM Installation cleanup
 rmdir /S /Q install\%BUILD_MODE%
