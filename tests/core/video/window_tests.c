@@ -6,7 +6,7 @@ MUNIT_DECLARE_TEST_FUNC(windowGetScreenUninitedVideo);
 static MunitTest windowTests[] = {
     {
         "/windowGetScreen-unitializedVideo",
-        windowGetScreenUninitedVideo,
+        MUNIT_TEST_FUNC_NAME(windowGetScreenUninitedVideo),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,

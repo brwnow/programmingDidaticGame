@@ -1,6 +1,8 @@
 #include <munit.h>
 #include <testsdefs.h>
 
+#include "utils\datastructure\list.h"
+
 MUNIT_DECLARE_TEST_FUNC(listCreate);
 MUNIT_DECLARE_TEST_FUNC(listEmptyInsert);
 MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsert);
@@ -13,13 +15,17 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveFromNotEmptyValidPosition);
 MUNIT_DECLARE_TEST_FUNC(listRemoveFromNotEmptyInvalidPosition);
 MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements);
 MUNIT_DECLARE_TEST_FUNC(listRemoveFromEmpty);
+
+MUNIT_DECLARE_SETUP_FUNC(listDestroyNotEmpty);
 MUNIT_DECLARE_TEST_FUNC(listDestroyNotEmpty);
+
+MUNIT_DECLARE_SETUP_FUNC(listDestroyEmpty);
 MUNIT_DECLARE_TEST_FUNC(listDestroyEmpty);
 
 static MunitTest listTests[] = {
     {
         "/listCreate",
-        listCreate,
+        MUNIT_TEST_FUNC_NAME(listCreate),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -27,7 +33,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsert-emptyList",
-        listEmptyInsert,
+        MUNIT_TEST_FUNC_NAME(listEmptyInsert),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -35,7 +41,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsert-notEmptyList",
-        listNotEmptyInsert,
+        MUNIT_TEST_FUNC_NAME(listNotEmptyInsert),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -43,7 +49,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsert-insertingLargeAmount",
-        listInsertLargeAmount,
+        MUNIT_TEST_FUNC_NAME(listInsertLargeAmount),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -51,7 +57,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsert-insertInValidPosition",
-        listInsertInValidPosition,
+        MUNIT_TEST_FUNC_NAME(listInsertInValidPosition),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -59,7 +65,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsert-insertInvalidPosition",
-        listInsertInInvalidPosition,
+        MUNIT_TEST_FUNC_NAME(listInsertInInvalidPosition),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -67,7 +73,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsertSublist-insertInValidPosition",
-        listInsertSublist,
+        MUNIT_TEST_FUNC_NAME(listInsertSublist),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -75,7 +81,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listInsertSublist-insertInvalidPosition",
-        listInsertSublistInInvalidPosition,
+        MUNIT_TEST_FUNC_NAME(listInsertSublistInInvalidPosition),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -83,7 +89,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listRemove-removeValidPositionFromNotEmptyList",
-        listRemoveFromNotEmptyValidPosition,
+        MUNIT_TEST_FUNC_NAME(listRemoveFromNotEmptyValidPosition),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -91,7 +97,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listRemove-removeInvalidPositionFromNotEmptyList",
-        listRemoveFromNotEmptyInvalidPosition,
+        MUNIT_TEST_FUNC_NAME(listRemoveFromNotEmptyInvalidPosition),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -99,7 +105,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listRemove-removeAllElements",
-        listRemoveAllElements,
+        MUNIT_TEST_FUNC_NAME(listRemoveAllElements),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -107,7 +113,7 @@ static MunitTest listTests[] = {
     },
     {
         "/listRemove-removeFromEmptyList",
-        listRemoveFromEmpty,
+        MUNIT_TEST_FUNC_NAME(listRemoveFromEmpty),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -115,16 +121,16 @@ static MunitTest listTests[] = {
     },
     {
         "/listDestroy-destroyNotEmptyList",
-        listDestroyNotEmpty,
-        NULL,
+        MUNIT_TEST_FUNC_NAME(listDestroyNotEmpty),
+        MUNIT_SETUP_FUNC_NAME(listDestroyNotEmpty),
         NULL,
         MUNIT_TEST_OPTION_NONE,
         NULL
     },
     {
         "/listDestroy-destroyEmptyList",
-        listDestroyEmpty,
-        NULL,
+        MUNIT_TEST_FUNC_NAME(listDestroyEmpty),
+        MUNIT_SETUP_FUNC_NAME(listDestroyEmpty),
         NULL,
         MUNIT_TEST_OPTION_NONE,
         NULL
@@ -190,12 +196,43 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveFromEmpty) {
     return MUNIT_FAIL;
 }
 
+MUNIT_DECLARE_SETUP_FUNC(listDestroyNotEmpty) {
+    return listCreate();
+}
+
 MUNIT_DECLARE_TEST_FUNC(listDestroyNotEmpty) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+
+    if(list == NULL)
+        return MUNIT_ERROR;
+
+    if(listGetElementsCount(list) == 0)
+        return MUNIT_ERROR;
+
+    ListResultCode ret = listDestroy(list);
+
+    if(ret == LIST_RC_OK)
+        return MUNIT_OK;
+    else
+        return MUNIT_FAIL;
+}
+
+MUNIT_DECLARE_SETUP_FUNC(listDestroyEmpty) {
+    return listCreate();
 }
 
 MUNIT_DECLARE_TEST_FUNC(listDestroyEmpty) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+
+    if(list == NULL)
+        return MUNIT_ERROR;
+
+    ListResultCode ret = listDestroy(list);
+
+    if(ret == LIST_RC_OK)
+        return MUNIT_OK;
+    else
+        return MUNIT_FAIL;
 }
 
 MunitSuite listTestsGetSuite(void) {
