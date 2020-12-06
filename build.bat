@@ -38,6 +38,8 @@ IF /I "%BUILD_MODE%" == "debug" (
     set BUILD_MODE=release
 )
 
+set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17
+
 REM Build cleanup
 IF EXIST build\%BUILD_MODE% (
     rmdir /S /Q build\%BUILD_MODE%
@@ -54,13 +56,16 @@ echo ----------------------------------------
 
 REM Game binary building
 
+set BUILD_COMPILE_INCLUDE_PATHS=-I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include
+
 REM Game binary compilation
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\main.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\log\log.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\log.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\events.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\events.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\keyboard.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\keyboard.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\video.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\video.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c -I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include %BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17 -o build\%BUILD_MODE%\window.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\main.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\main.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\log\log.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\log.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\datastructure\list.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\list.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\events.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\events.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\keyboard.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\keyboard.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\video.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\video.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\window.o
 
 REM Game binary linking
 %TOOLCHAIN_PATH%\%C_COMPILER% build\%BUILD_MODE%\main.o build\%BUILD_MODE%\log.o build\%BUILD_MODE%\events.o build\%BUILD_MODE%\keyboard.o build\%BUILD_MODE%\video.o build\%BUILD_MODE%\window.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib %BUILD_LINKING_FLAGS% -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\%BUILD_MODE%\brenoGame.exe
