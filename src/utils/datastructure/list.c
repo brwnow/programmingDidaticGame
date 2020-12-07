@@ -1,6 +1,11 @@
 #include "utils/datastructure/list.h"
 
 #include <stdlib.h>
+#include <stdbool.h>
+
+// ===============
+// PRIVATE SECTION
+// ===============
 
 typedef struct _Node {
     void *data;
@@ -13,6 +18,41 @@ struct _List {
     Node *lastNode;
     unsigned long elementsCount;
 };
+
+static Node* createNode(void *data, Node *previous, Node *next) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+
+    if(newNode == NULL)
+        return NULL;
+
+    newNode->data = data;
+    newNode->prev = previous;
+    newNode->next = next;
+
+    return newNode;
+}
+
+static ListResultCode insertFirstNode(List *list, void *element) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount > 0UL)
+        return LIST_RC_FAIL; // List not empty. First node was already inserted
+
+    Node *firstNode = createNode(element, NULL, NULL);
+
+    if(firstNode == NULL)
+        return LIST_RC_FAIL; // Failed to allocated memory for the first node
+
+    list->firstNode = list->lastNode = firstNode;
+    list->elementsCount = 1UL;
+
+    return LIST_RC_OK;
+}
+
+// ==============
+// PUBLIC SECTION
+// ==============
 
 List* listCreate(void) {
     List *newList = (List*)malloc(sizeof(List));
@@ -40,9 +80,203 @@ ListResultCode listDestroy(List *list) {
 
 unsigned long listGetElementsCount(List *list) {
     if(list == NULL)
-        return 0;
+        return 0UL;
 
     return list->elementsCount;
+}
+
+ListResultCode listGetBegin(List *list, ListIterator **iterator) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL)
+        return LIST_RC_FIND_NOT_FOUND;
+
+    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+
+    if(*iterator == NULL)
+        return LIST_RC_FAIL;
+
+    (*iterator)->data = list->firstNode->data;
+    (*iterator)->currentNode = list->firstNode;
+
+    return LIST_RC_OK;
+}
+
+ListResultCode listGetEnd(List *list, ListIterator **iterator) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL)
+        return LIST_RC_FIND_NOT_FOUND;
+
+    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+
+    if(*iterator == NULL)
+        return LIST_RC_FAIL;
+
+    (*iterator)->data = list->lastNode->data;
+    (*iterator)->currentNode = list->lastNode;
+
+    return LIST_RC_OK;
+}
+
+ListResultCode listFindElement(List *list, unsigned long position, ListIterator **iterator) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(position >= list->elementsCount)
+        return LIST_RC_OUT_OF_BOUNDS;
+
+    // Whether the search must happend forward or backward
+    bool moveForward = position <= list->elementsCount / 2UL;
+
+    Node *currentNode = moveForward ? list->firstNode : list->lastNode;
+    unsigned long i = moveForward ? 0UL : list->elementsCount - 1UL;
+    while(i != position) {
+        if(moveForward) {
+            currentNode = currentNode->next;
+            ++i;
+        } else {
+            currentNode = currentNode->prev;
+            --i;
+        }
+    }
+
+    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+
+    if(*iterator == NULL)
+        return LIST_RC_FAIL;
+
+    (*iterator)->data = currentNode->data;
+    (*iterator)->currentNode = currentNode;
+    return LIST_RC_OK;
+}
+
+ListResultCode listMoveNext(ListIterator *iterator) {
+    if(iterator == NULL)
+        return LIST_RC_FAIL;
+
+    Node *currentNode = iterator->currentNode;
+
+    if(currentNode == NULL)
+        return LIST_RC_FAIL;
+
+    if(currentNode->next == NULL)
+        return LIST_RC_ITERATOR_END_REACHED;
+
+    currentNode = currentNode->next;
+    iterator->data = currentNode->data;
+    iterator->currentNode = currentNode;
+
+    return LIST_RC_OK;
+}
+
+ListResultCode listMoveBack(ListIterator *iterator) {
+    if(iterator == NULL)
+        return LIST_RC_FAIL;
+
+    Node *currentNode = iterator->currentNode;
+
+    if(currentNode == NULL)
+        return LIST_RC_FAIL;
+
+    if(currentNode->prev == NULL)
+        return LIST_RC_ITERATOR_BEGIN_REACHED;
+
+    currentNode = currentNode->prev;
+    iterator->data = currentNode->data;
+    iterator->currentNode = currentNode;
+
+    return LIST_RC_OK;
+}
+
+ListResultCode listInsert(List *list, unsigned long position, void *element) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(position > list->elementsCount)
+        return LIST_RC_OUT_OF_BOUNDS;
+
+    if(list->elementsCount == 0UL) { // List is empty, inserting first element
+        return insertFirstNode(list, element);
+    } else if(position == 0UL) { // Pushing the element in front
+        return listPushFront(list, element);
+    } else if(position == list->elementsCount) { // Pushing the element in back
+        return listPushBack(list, element);
+    } else { // Defult insertion case
+        ListIterator *iterator;
+        ListResultCode ret = LIST_RC_FAIL;
+
+        ret = listFindElement(list, position, &iterator);
+        if(ret != LIST_RC_OK) {
+            // Note that it's not the case of inserting out of bounds
+            // because it was previsouly verified if position is greater than
+            // list number of elements
+            ret = LIST_RC_FAIL;
+        }
+
+        Node *foundNode = NULL;
+        Node *newNode = NULL;
+        if(ret == LIST_RC_OK) {
+            foundNode = (Node*)(iterator->currentNode);
+            newNode = createNode(element, foundNode->prev, foundNode);
+
+            if(newNode == NULL) // It was not possible to allocate memory for the new node
+                ret = LIST_RC_FAIL;
+        }
+
+        if(ret == LIST_RC_OK) { // If everything went ok, effectively insert the new node
+            foundNode->prev->next = newNode;
+            foundNode->prev = newNode;
+            ++(list->elementsCount);
+        }
+
+        if(iterator != NULL)
+            free(iterator);
+
+        return ret;
+    }
+}
+
+ListResultCode listPushFront(List *list, void *element) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL) {
+        return insertFirstNode(list, element);
+    } else {
+        Node *newNode = createNode(element, NULL, list->firstNode);
+
+        if(newNode == NULL)
+            return LIST_RC_FAIL;
+
+        list->firstNode->prev = newNode;
+        list->firstNode = newNode;
+        ++(list->elementsCount);
+
+        return LIST_RC_OK;
+    }
+}
+
+ListResultCode listPushBack(List *list, void *element) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL) {
+        return insertFirstNode(list, element);
+    } else {
+        Node *newNode = createNode(element, list->lastNode, NULL);
+
+        if(newNode == NULL)
+            return LIST_RC_FAIL;
+
+        list->lastNode->next = newNode;
+        list->lastNode = newNode;
+        ++(list->elementsCount);
+
+        return LIST_RC_OK;
+    }
 }
 
 ListResultCode listRemoveAll(List *list) {

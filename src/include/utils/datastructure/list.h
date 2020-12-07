@@ -3,6 +3,13 @@
 
 typedef struct _List List;
 
+typedef struct _ListIterator {
+    void *data;
+
+    // void pointer to encapsulate the internal list node structure
+    void *currentNode;
+} ListIterator;
+
 typedef enum _ListResultCode {
 
 /* *** ERROR CODES *** */
@@ -63,6 +70,121 @@ ListResultCode listDestroy(List *list);
  * @return Returns 0 if it fails
  */
 unsigned long listGetElementsCount(List *list);
+
+/**
+ * @brief Get an iterator for the first element
+ * 
+ * @param list The address of the list to get the first element
+ * @param iterator The address of a pointer of ListIterator where to store
+ * the result ListIterator address
+ * 
+ * @return On success returns LIST_RC_OK and sets @p iterator with iterator for first element
+ * @return On element not found returns LIST_RC_FIND_NOTFOUND
+ * @return On other errros returns LIST_RC_FAIL
+ */
+ListResultCode listGetBegin(List *list, ListIterator **iterator);
+
+/**
+ * @brief Get an iterator for the last element
+ * 
+ * @param list The address of the list to get the last element
+ * @param iterator The address of a pointer of ListIterator where to store
+ * the result ListIterator address
+ * 
+ * @return On success returns LIST_RC_OK and sets @p iterator with iterator for last element
+ * @return On element not found returns LIST_RC_FIND_NOTFOUND
+ * @return On other errros returns LIST_RC_FAIL
+ */
+ListResultCode listGetEnd(List *list, ListIterator **iterator);
+
+/**
+ * @brief Find an element in the given position
+ * 
+ * @param list The address of the list to search for an element
+ * @param position The position to be found in the list
+ * @param iterator The address of a pointer of ListIterator where to store
+ * the result ListIterator address
+ * 
+ * @return On success returns LIST_RC_OK and sets @p iterator with the result iterator
+ * @return On element not found returns LIST_RC_FIND_NOTFOUND
+ * @return On other errros returns LIST_RC_FAIL
+ */
+ListResultCode listFindElement(List *list, unsigned long position, ListIterator **iterator);
+
+/**
+ * @brief Updates iterator with next element
+ * 
+ * @param iterator Pointer to a ListIterator which will be moved forward
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_ITERATOR_END_REACHED if iterator has reached the last element
+ * @return On other errros returns LIST_RC_FAIL
+ */
+ListResultCode listMoveNext(ListIterator *iterator);
+
+/**
+ * @brief Updates iterator with previous element
+ * 
+ * @param iterator Pointer to a ListIterator which will be moved backward
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_ITERATOR_BEGIN_REACHED if iterator has reached the first element
+ * @return On other errros returns LIST_RC_FAIL
+ */
+ListResultCode listMoveBack(ListIterator *iterator);
+
+/**
+ * @brief Insert an element in the list
+ * 
+ * Once an element is inserted in the list, its ownership is transferred
+ * to the list. It will be removed from memory in operations like
+ * #listRemoveAll or #listRemove
+ * 
+ * @param list The address of the list to which the element
+ * must be inserted
+ * @param position The position in the list in which the element
+ * must be inserted
+ * @param element A pointer to the memory that holds the element
+ * to be inserted
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to insert
+ * in invalid position in list
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listInsert(List *list, unsigned long position, void *element);
+
+/**
+ * @brief Insert an element to the front of the list
+ * 
+ * This operation insert an element in the position 0.
+ * If the list is not empty it makes the first element the be
+ * the second one and the inserted element becomes the first one
+ * 
+ * @param list The address of the list to which the element
+ * must be inserted
+ * @param element A pointer to the memory that holds the element
+ * to be inserted
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return Otherwise returns LIST_RC_FAIL
+ */
+ListResultCode listPushFront(List *list, void *element);
+
+/**
+ * @brief Insert an element to the back of the list
+ * 
+ * This operation insert an element in the last position.
+ * 
+ * @param list The address of the list to which the element
+ * must be inserted
+ * @param element A pointer to the memory that holds the element
+ * to be inserted
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return Otherwise returns LIST_RC_FAIL
+ */
+ListResultCode listPushBack(List *list, void *element);
 
 /**
  * @brief Removes all elements of a given list
