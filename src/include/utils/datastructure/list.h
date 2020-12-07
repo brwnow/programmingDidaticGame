@@ -4,9 +4,28 @@
 typedef struct _List List;
 
 typedef enum _ListResultCode {
-    LIST_RC_FAIL, /**< List operation failed */
+
+/* *** ERROR CODES *** */
+
+    // Generic error code
+    LIST_RC_OUT_OF_BOUNDS = -999, /**< List operation range out of bounds */
+    LIST_RC_FAIL = -1, /**< List operation failed */
+
+/* *** SUCCESS CODE *** */
+
+    // Generic success code
     LIST_RC_OK = 0, /**< List operation succeed */
-    LIST_RC_REMOVE_ALREADY_EMPTY /**< Remove operation not performed due to list is already empty */
+
+/* *** WARNING CODES *** */
+
+    // Warning codes related to removing elements
+    LIST_RC_REMOVE_ALREADY_EMPTY = 9000, /**< Remove operation not performed due to list is already empty */
+
+    // Warning codes related to searching elements
+    LIST_RC_FIND_NOT_FOUND = 7000, /**< Element is not in the list */
+    LIST_RC_ITERATOR_BEGIN_REACHED, /**< Iterator has reached the beginning of the list */
+    LIST_RC_ITERATOR_END_REACHED /**< Iterator has reached the end of the list */
+
 } ListResultCode;
 
 /**
