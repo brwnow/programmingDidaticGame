@@ -279,6 +279,95 @@ ListResultCode listPushBack(List *list, void *element) {
     }
 }
 
+ListResultCode listRemove(List *list, unsigned long position) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL)
+        return LIST_RC_REMOVE_ALREADY_EMPTY;
+
+    if(position >= list->elementsCount)
+        return LIST_RC_OUT_OF_BOUNDS;
+
+    if(position == 0UL) { // Popping the element from front
+        return listPopFront(list);
+    } else if(position == list->elementsCount - 1) { // Popping the element from back
+        return listPopBack(list);
+    } else { // Defult insertion case
+        ListIterator *iterator;
+        ListResultCode ret = LIST_RC_FAIL;
+
+        ret = listFindElement(list, position, &iterator);
+        if(ret != LIST_RC_OK) {
+            // Note that it's not the case of inserting out of bounds
+            // because it was previsouly verified if position is greater than
+            // list number of elements
+            ret = LIST_RC_FAIL;
+        }
+
+        if(ret == LIST_RC_OK) { // If everything went ok, effectively remove the node
+            Node *foundNode = iterator->currentNode;
+            foundNode->prev->next = foundNode->next;
+            foundNode->next->prev = foundNode->prev;
+
+            free(foundNode->data);
+            free(foundNode);
+            --(list->elementsCount);
+        }
+
+        if(iterator != NULL)
+            free(iterator);
+
+        return ret;
+    }
+}
+
+ListResultCode listPopFront(List *list) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL)
+        return LIST_RC_REMOVE_ALREADY_EMPTY;
+
+    Node *nodeToPop = list->firstNode;
+
+    if(list->elementsCount == 1UL) { // Last node being removed
+        list->firstNode = list->lastNode = NULL;
+    } else {
+        list->firstNode = list->firstNode->next;
+        list->firstNode->prev = NULL;
+    }
+
+    free(nodeToPop->data);
+    free(nodeToPop);
+    --(list->elementsCount);
+
+    return LIST_RC_OK;
+}
+
+ListResultCode listPopBack(List *list) {
+    if(list == NULL)
+        return LIST_RC_FAIL;
+
+    if(list->elementsCount == 0UL)
+        return LIST_RC_REMOVE_ALREADY_EMPTY;
+
+    Node *nodeToPop = list->lastNode;
+
+    if(list->elementsCount == 1UL) { // Last node being removed
+        list->firstNode = list->lastNode = NULL;
+    } else {
+        list->lastNode = list->lastNode->prev;
+        list->lastNode->next = NULL;
+    }
+
+    free(nodeToPop->data);
+    free(nodeToPop);
+    --(list->elementsCount);
+
+    return LIST_RC_OK;
+}
+
 ListResultCode listRemoveAll(List *list) {
     if(list == NULL)
         return LIST_RC_FAIL;

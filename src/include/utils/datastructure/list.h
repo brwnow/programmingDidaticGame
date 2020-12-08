@@ -187,6 +187,51 @@ ListResultCode listPushFront(List *list, void *element);
 ListResultCode listPushBack(List *list, void *element);
 
 /**
+ * @brief Remove an element from the list
+ * 
+ * This operation remove an element
+ * When an element is removed from the list, it's data is
+ * removed from memory because it's ownership belongs to
+ * the list
+ * 
+ * @param list The address of the list from which the element
+ * must be removed
+ * @param position The position in the list from which the element
+ * must be removed
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to remove
+ * from an invalid position in list
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listRemove(List *list, unsigned long position);
+
+/**
+ * @brief Remove the first element from the list
+ * 
+ * @param list The address of the list from which the element
+ * must be removed
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listPopFront(List *list);
+
+/**
+ * @brief Remove the last element from the list
+ * 
+ * @param list The address of the list from which the element
+ * must be removed
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listPopBack(List *list);
+
+/**
  * @brief Removes all elements of a given list
  * 
  * @param list The address of the list from which all elements
