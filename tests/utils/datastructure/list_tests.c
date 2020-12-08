@@ -381,8 +381,7 @@ MUNIT_DECLARE_SETUP_FUNC(listEmptyPushFront) {
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPushFront) {
-    if(fixture != NULL)
-        listDestroy((List*)fixture);
+    listDestroy((List*)fixture);
 }
 
 MUNIT_DECLARE_TEST_FUNC(listEmptyPushFront) {
@@ -426,8 +425,7 @@ MUNIT_DECLARE_SETUP_FUNC(listEmptyPushBack) {
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPushBack) {
-    if(fixture != NULL)
-        listDestroy((List*)fixture);
+    listDestroy((List*)fixture);
 }
 
 MUNIT_DECLARE_TEST_FUNC(listEmptyPushBack) {
@@ -471,8 +469,7 @@ MUNIT_DECLARE_SETUP_FUNC(listEmptyInsert) {
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyInsert) {
-    if(fixture != NULL)
-        listDestroy((List*)fixture);
+    listDestroy((List*)fixture);
 }
 
 MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
@@ -529,8 +526,7 @@ MUNIT_DECLARE_SETUP_FUNC(listNotEmptyInsertVariablePositions) {
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listNotEmptyInsertVariablePositions) {
-    if(fixture != NULL)
-        listDestroy((List*)fixture);
+    listDestroy((List*)fixture);
 }
 
 MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertVariablePositions) {
