@@ -41,12 +41,15 @@ MUNIT_DECLARE_SETUP_FUNC(listNotEmptyInsertVariablePositions);
 MUNIT_DECLARE_TEARDOWN_FUNC(listNotEmptyInsertVariablePositions);
 MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertVariablePositions);
 
-
+// Inserting large amount of elements in random positions
+MUNIT_DECLARE_SETUP_FUNC(listInsertLargeAmount);
+MUNIT_DECLARE_TEARDOWN_FUNC(listInsertLargeAmount);
 MUNIT_DECLARE_TEST_FUNC(listInsertLargeAmount);
-MUNIT_DECLARE_TEST_FUNC(listInsertInValidPosition);
+
+// Inserting an element in an invalid position
+MUNIT_DECLARE_SETUP_FUNC(listInsertInInvalidPosition);
+MUNIT_DECLARE_TEARDOWN_FUNC(listInsertInInvalidPosition);
 MUNIT_DECLARE_TEST_FUNC(listInsertInInvalidPosition);
-MUNIT_DECLARE_TEST_FUNC(listInsertSublist);
-MUNIT_DECLARE_TEST_FUNC(listInsertSublistInInvalidPosition);
 
 // REMOVING
 
@@ -132,18 +135,18 @@ static MunitTest listTests[] = {
         NULL
     },
     {
-        "/listInsert-insertingLargeAmount",
+        "/listInsert-largeAmount",
         MUNIT_TEST_FUNC_NAME(listInsertLargeAmount),
-        NULL,
-        NULL,
+        MUNIT_SETUP_FUNC_NAME(listInsertLargeAmount),
+        MUNIT_TEARDOWN_FUNC_NAME(listInsertLargeAmount),
         MUNIT_TEST_OPTION_NONE,
         NULL
     },
     {
-        "/listInsert-insertInValidPosition",
-        MUNIT_TEST_FUNC_NAME(listInsertInValidPosition),
-        NULL,
-        NULL,
+        "/listInsert-invalidPosition",
+        MUNIT_TEST_FUNC_NAME(listInsertInInvalidPosition),
+        MUNIT_SETUP_FUNC_NAME(listInsertInInvalidPosition),
+        MUNIT_TEARDOWN_FUNC_NAME(listInsertInInvalidPosition),
         MUNIT_TEST_OPTION_NONE,
         NULL
     },
@@ -501,20 +504,100 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertVariablePositions) {
 
 // ============
 
+MUNIT_DECLARE_SETUP_FUNC(listInsertLargeAmount) {
+    List *list = listCreate();
+
+    listPushBack(list, malloc(sizeof(int)));
+
+    return list;
+}
+
+MUNIT_DECLARE_TEARDOWN_FUNC(listInsertLargeAmount) {
+    listDestroy((List*)fixture);
+}
+
 MUNIT_DECLARE_TEST_FUNC(listInsertLargeAmount) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+    const size_t amountToBeInserted = 50000;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 1UL);
+
+    for(size_t i = 0; i < amountToBeInserted; ++i) {
+        int insertMethod = munit_rand_int_range(0, 2);
+        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list));
+        ListResultCode ret = LIST_RC_FAIL;
+
+        switch (insertMethod)
+        {
+        case 0:
+            ret = listInsert(list, position, malloc(sizeof(int)));
+            break;
+
+        case 1:
+            ret = listPushFront(list, malloc(sizeof(int)));
+            break;
+
+        case 2:
+            ret = listPushBack(list, malloc(sizeof(int)));
+            break;
+        }
+
+        munit_assert_ulong(ret, ==, LIST_RC_OK);
+    }
+
+    munit_assert_ulong(listGetElementsCount(list), ==, amountToBeInserted + 1);
+
+    return MUNIT_OK;
 }
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listInsertInValidPosition) {
-    return MUNIT_FAIL;
+MUNIT_DECLARE_SETUP_FUNC(listInsertInInvalidPosition) {
+    List *list = listCreate();
+
+    listPushBack(list, malloc(sizeof(double)));
+    listPushBack(list, malloc(sizeof(double)));
+    listPushBack(list, malloc(sizeof(double)));
+
+    return list;
 }
 
-// ============
+MUNIT_DECLARE_TEARDOWN_FUNC(listInsertInInvalidPosition) {
+    listDestroy((List*)fixture);
+}
 
 MUNIT_DECLARE_TEST_FUNC(listInsertInInvalidPosition) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+
+    munit_assert_ulong(listInsert(list, 5UL, NULL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+
+    return MUNIT_OK;
+}
+
+// REMOVING
+
+MUNIT_DECLARE_SETUP_FUNC(listEmptyPopFront) {
+    return listCreate();
+}
+
+MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPopFront) {
+    listDestroy((List*)fixture);
+}
+
+MUNIT_DECLARE_TEST_FUNC(listEmptyPopFront) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+
+    munit_assert_ulong(listPopFront(list), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+
+    return MUNIT_OK;
 }
 
 // ============
