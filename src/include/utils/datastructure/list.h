@@ -238,6 +238,7 @@ ListResultCode listPopBack(List *list);
  * must be removed
  * 
  * @return On success returns LIST_RC_OK
+ * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
  * @return Returns LIST_RC_FAIL if unable to remove all elements
  */
 ListResultCode listRemoveAll(List *list);
