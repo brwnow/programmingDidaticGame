@@ -676,9 +676,10 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertVariablePositions) {
 
     ListIterator *it;
     munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_not_null(it);
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it);
+        munit_assert_not_null(it->data);
         char val = *((char*)it->data);
 
         munit_assert_int(val, ==, elems[i]);
