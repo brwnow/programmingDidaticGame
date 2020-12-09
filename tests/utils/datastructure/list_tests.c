@@ -109,6 +109,11 @@ MUNIT_DECLARE_SETUP_FUNC(listRemove);
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemove);
 MUNIT_DECLARE_TEST_FUNC(listRemove);
 
+// Removing with remove random index from populated list
+MUNIT_DECLARE_SETUP_FUNC(listRemoveRandom);
+MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveRandom);
+MUNIT_DECLARE_TEST_FUNC(listRemoveRandom);
+
 // Removing with remove from populated list pasing an invalid position
 MUNIT_DECLARE_SETUP_FUNC(listRemoveInvalidPosition);
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition);
@@ -333,6 +338,14 @@ static MunitTest listTests[] = {
         MUNIT_TEST_FUNC_NAME(listRemove),
         MUNIT_SETUP_FUNC_NAME(listRemove),
         MUNIT_TEARDOWN_FUNC_NAME(listRemove),
+        MUNIT_TEST_OPTION_NONE,
+        NULL
+    },
+    {
+        "/listRemove-random",
+        MUNIT_TEST_FUNC_NAME(listRemoveRandom),
+        MUNIT_SETUP_FUNC_NAME(listRemoveRandom),
+        MUNIT_TEARDOWN_FUNC_NAME(listRemoveRandom),
         MUNIT_TEST_OPTION_NONE,
         NULL
     },
@@ -882,16 +895,13 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemoveAllElements) {
 
 MUNIT_DECLARE_SETUP_FUNC(listPopFront) {
     List *list = listCreate();
+    int elems[] = {20, 35, 59, -85, 1, 289, 999999};
 
-    int *elem = malloc(sizeof(int));
-    *elem = 20;
-    listPushBack(list, elem);
-    elem = malloc(sizeof(int));
-    *elem = 35;
-    listPushBack(list, elem);
-    elem = malloc(sizeof(int));
-    *elem = 59;
-    listPushBack(list, elem);
+    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
+        int *elem = malloc(sizeof(int));
+        *elem = elems[i];
+        listPushBack(list, elem);
+    }
 
     return list;
 }
@@ -901,13 +911,52 @@ MUNIT_DECLARE_TEARDOWN_FUNC(listPopFront) {
 }
 
 MUNIT_DECLARE_TEST_FUNC(listPopFront) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+    int remainingElems[] = {-85, 1, 289, 999999};
+    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
+    const size_t numberOfRemoves = 3;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
+
+    for(size_t i = 0; i < numberOfRemoves; ++i) {
+        munit_assert_long(listPopFront(list), ==, LIST_RC_OK);
+    }
+
+    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+
+    ListIterator *it;
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_not_null(it);
+
+    for(size_t i = 0; i < elemsCount; ++i) {
+        munit_assert_not_null(it->data);
+        int val = *((int*)it->data);
+
+        munit_assert_int(val, ==, remainingElems[i]);
+
+        if(i < elemsCount - 1)
+            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+    }
+
+    free(it);
+
+    return MUNIT_OK;
 }
 
 // ============
 
 MUNIT_DECLARE_SETUP_FUNC(listPopBack) {
-    return NULL;
+    List *list = listCreate();
+    int elems[] = {20, 35, 59, -85, 1, 289, 999999};
+
+    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
+        int *elem = malloc(sizeof(int));
+        *elem = elems[i];
+        listPushBack(list, elem);
+    }
+
+    return list;
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listPopBack) {
@@ -915,13 +964,52 @@ MUNIT_DECLARE_TEARDOWN_FUNC(listPopBack) {
 }
 
 MUNIT_DECLARE_TEST_FUNC(listPopBack) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+    int remainingElems[] = {20, 35, 59, -85};
+    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
+    const size_t numberOfRemoves = 3;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
+
+    for(size_t i = 0; i < numberOfRemoves; ++i) {
+        munit_assert_long(listPopBack(list), ==, LIST_RC_OK);
+    }
+
+    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+
+    ListIterator *it;
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_not_null(it);
+
+    for(size_t i = 0; i < elemsCount; ++i) {
+        munit_assert_not_null(it->data);
+        int val = *((int*)it->data);
+
+        munit_assert_int(val, ==, remainingElems[i]);
+
+        if(i < elemsCount - 1)
+            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+    }
+
+    free(it);
+
+    return MUNIT_OK;
 }
 
 // ============
 
 MUNIT_DECLARE_SETUP_FUNC(listRemove) {
-    return NULL;
+    List *list = listCreate();
+    int elems[] = {20, 35, 59, -85, 1, 289, 999999, -456888, 0, 2, 4, 6, 8, 7, 3, 5};
+
+    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
+        int *elem = malloc(sizeof(int));
+        *elem = elems[i];
+        listPushBack(list, elem);
+    }
+
+    return list;
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemove) {
@@ -929,13 +1017,104 @@ MUNIT_DECLARE_TEARDOWN_FUNC(listRemove) {
 }
 
 MUNIT_DECLARE_TEST_FUNC(listRemove) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+    int remainingElems[] = {35, -85, 289, -456888, 2, 4, 6, 8, 3};
+    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
+    size_t indexesToRemove[] = {15, 0, 3, 1, 5, 3, 8};
+    const size_t numberOfRemoves = sizeof(indexesToRemove) / sizeof(size_t);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 16UL);
+
+    for(size_t i = 0; i < numberOfRemoves; ++i) {
+        munit_assert_long(listRemove(list, indexesToRemove[i]), ==, LIST_RC_OK);
+    }
+
+    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+
+    ListIterator *it;
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_not_null(it);
+
+    for(size_t i = 0; i < elemsCount; ++i) {
+        munit_assert_not_null(it->data);
+        int val = *((int*)it->data);
+
+        munit_assert_int(val, ==, remainingElems[i]);
+
+        if(i < elemsCount - 1)
+            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+    }
+
+    free(it);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+MUNIT_DECLARE_SETUP_FUNC(listRemoveRandom) {
+    List *list = listCreate();
+    const size_t listElemsCount = 25000;
+
+    for(size_t i = 0; i < listElemsCount; ++i) {
+        listPushBack(list, malloc(sizeof(int)));
+    }
+
+    return list;
+}
+
+MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveRandom) {
+    listDestroy((List*)fixture);
+}
+
+MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 25000UL);
+
+    for(size_t i = 0; i < 25000; ++i) {
+        int removeMethod = munit_rand_int_range(0, 4);
+        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list) - 1);
+        ListResultCode ret = LIST_RC_FAIL;
+
+        switch (removeMethod)
+        {
+        case 0:
+        case 1:
+        case 2:
+            ret = listRemove(list, position);
+            break;
+
+        case 3:
+            ret = listPopFront(list);
+            break;
+
+        case 4:
+            ret = listPopBack(list);
+            break;
+        }
+
+        munit_assert_ulong(ret, ==, LIST_RC_OK);
+    }
+
+    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+
+    return MUNIT_OK;
 }
 
 // ============
 
 MUNIT_DECLARE_SETUP_FUNC(listRemoveInvalidPosition) {
-    return NULL;
+    List *list = listCreate();
+    const size_t listElemsCount = 3;
+
+    for(size_t i = 0; i < listElemsCount; ++i) {
+        listPushBack(list, malloc(sizeof(int)));
+    }
+
+    return list;
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition) {
@@ -943,13 +1122,28 @@ MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition) {
 }
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+
+    munit_assert_ulong(listRemove(list, 4UL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+
+    return MUNIT_OK;
 }
 
 // ============
 
 MUNIT_DECLARE_SETUP_FUNC(listRemoveAllElements) {
-    return NULL;
+    List *list = listCreate();
+    const size_t listElemsCount = 75000;
+
+    for(size_t i = 0; i < listElemsCount; ++i) {
+        listPushBack(list, malloc(sizeof(int)));
+    }
+
+    return list;
 }
 
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveAllElements) {
@@ -957,7 +1151,15 @@ MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveAllElements) {
 }
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
-    return MUNIT_FAIL;
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(listGetElementsCount(list), ==, 75000UL);
+
+    munit_assert_ulong(listRemoveAll(list), ==, LIST_RC_OK);
+    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+
+    return MUNIT_OK;
 }
 
 // MIX INSERT-REMOVE
