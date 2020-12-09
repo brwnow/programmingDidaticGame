@@ -74,6 +74,9 @@ MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr);
 // Passing null pointer to listRemove
 MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr);
 
+// Passing null pointer to listRemoveAll
+MUNIT_DECLARE_TEST_FUNC(listRemoveAllNullPtr);
+
 // Removing with pop front operation from empty list
 MUNIT_DECLARE_SETUP_FUNC(listEmptyPopFront);
 MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPopFront);
@@ -280,6 +283,14 @@ static MunitTest listTests[] = {
     {
         "/listRemove-nullPtr",
         MUNIT_TEST_FUNC_NAME(listRemoveNullPtr),
+        NULL,
+        NULL,
+        MUNIT_TEST_OPTION_NONE,
+        NULL
+    },
+    {
+        "/listRemoveAll-nullPtr",
+        MUNIT_TEST_FUNC_NAME(listRemoveAllNullPtr),
         NULL,
         NULL,
         MUNIT_TEST_OPTION_NONE,
@@ -803,6 +814,14 @@ MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
     munit_assert_long(listRemove(NULL, 0UL), ==, LIST_RC_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+MUNIT_DECLARE_TEST_FUNC(listRemoveAllNullPtr) {
+    munit_assert_long(listRemoveAll(NULL), ==, LIST_RC_FAIL);
 
     return MUNIT_OK;
 }
