@@ -10,6 +10,12 @@ typedef struct _ListIterator {
     void *currentNode;
 } ListIterator;
 
+/**
+ * Result codes for list operations
+ * Codes smaller than 0 means ERROR
+ * Codes greater than 0 means WARNING
+ * 0 means OK
+ */
 typedef enum _ListResultCode {
 
 /* *** ERROR CODES *** */
