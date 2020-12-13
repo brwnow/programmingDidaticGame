@@ -20,6 +20,9 @@ typedef enum _ListResultCode {
 
 /* *** ERROR CODES *** */
 
+    // Memory error code
+    LIST_RC_OUT_OF_MEMORY = -1999, /**< List operation failed due to lack of memory */
+
     // Generic error code
     LIST_RC_OUT_OF_BOUNDS = -999, /**< List operation range out of bounds */
     LIST_RC_FAIL = -1, /**< List operation failed */

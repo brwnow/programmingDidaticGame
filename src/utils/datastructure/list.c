@@ -42,7 +42,7 @@ static ListResultCode insertFirstNode(List *list, void *element) {
     Node *firstNode = createNode(element, NULL, NULL);
 
     if(firstNode == NULL)
-        return LIST_RC_FAIL; // Failed to allocated memory for the first node
+        return LIST_RC_OUT_OF_MEMORY; // Failed to allocated memory for the first node
 
     list->firstNode = list->lastNode = firstNode;
     list->elementsCount = 1UL;
@@ -95,7 +95,7 @@ ListResultCode listGetBegin(List *list, ListIterator **iterator) {
     *iterator = (ListIterator*)malloc(sizeof(ListIterator));
 
     if(*iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_RC_OUT_OF_MEMORY;
 
     (*iterator)->data = list->firstNode->data;
     (*iterator)->currentNode = list->firstNode;
@@ -113,7 +113,7 @@ ListResultCode listGetEnd(List *list, ListIterator **iterator) {
     *iterator = (ListIterator*)malloc(sizeof(ListIterator));
 
     if(*iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_RC_OUT_OF_MEMORY;
 
     (*iterator)->data = list->lastNode->data;
     (*iterator)->currentNode = list->lastNode;
@@ -146,7 +146,7 @@ ListResultCode listFindElement(List *list, unsigned long position, ListIterator 
     *iterator = (ListIterator*)malloc(sizeof(ListIterator));
 
     if(*iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_RC_OUT_OF_MEMORY;
 
     (*iterator)->data = currentNode->data;
     (*iterator)->currentNode = currentNode;
