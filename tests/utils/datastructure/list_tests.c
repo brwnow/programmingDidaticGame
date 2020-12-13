@@ -30,7 +30,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushFrontNullPtr);
 // Passing null pointer to listPushBack
 MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr);
 
-// Passing null pointer to listInsert
+// Passing null pointer to listInsertAtIndex
 MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr);
 
 // Inserting with push front operation in an empty list
@@ -515,7 +515,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
-    munit_assert_long(listInsert(NULL, 0UL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listInsertAtIndex(NULL, 0UL, NULL), ==, LIST_RC_FAIL);
 
     return MUNIT_OK;
 }
@@ -629,7 +629,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
         *elem = elems[i];
-        munit_assert_long(listInsert(list, i, elem), ==, LIST_RC_OK);
+        munit_assert_long(listInsertAtIndex(list, i, elem), ==, LIST_RC_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
@@ -685,16 +685,16 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertVariablePositions) {
 
     char *elem = (char*)malloc(sizeof(char));
     *elem = elems[1];
-    munit_assert_long(listInsert(list, 1, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 1, elem), ==, LIST_RC_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[4];
-    munit_assert_long(listInsert(list, 3, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 3, elem), ==, LIST_RC_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[2];
-    munit_assert_long(listInsert(list, 2, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 2, elem), ==, LIST_RC_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[5];
-    munit_assert_long(listInsert(list, 5, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 5, elem), ==, LIST_RC_OK);
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
@@ -746,7 +746,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertLargeAmount) {
         switch (insertMethod)
         {
         case 0:
-            ret = listInsert(list, position, malloc(sizeof(int)));
+            ret = listInsertAtIndex(list, position, malloc(sizeof(int)));
             break;
 
         case 1:
@@ -788,7 +788,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertInInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listInsert(list, 5UL, NULL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listInsertAtIndex(list, 5UL, NULL), ==, LIST_RC_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;

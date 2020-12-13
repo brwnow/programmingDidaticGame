@@ -143,11 +143,33 @@ ListResultCode listMoveNext(ListIterator *iterator);
 ListResultCode listMoveBack(ListIterator *iterator);
 
 /**
- * @brief Insert an element in the list
+ * @brief Insert an element in the list at the current position of the given iterator
+ *
+ * Once an element is inserted in the list, its ownership is transferred
+ * to the list. It will be removed from memory in operations like
+ * #listRemoveAll, #listRemoveFromIndex or #listRemove
+ *
+ * @param list The address of the list to which the element
+ * must be inserted
+ * @param iterator An iterator holding the position where to insert
+ * the element. The element will be inserted before the current element pointed
+ * by the iterator
+ * @param element A pointer to the memory that holds the element
+ * to be inserted
+ *
+ * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to insert
+ * in invalid position in list
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
+
+/**
+ * @brief Insert an element in the list at a given position
  * 
  * Once an element is inserted in the list, its ownership is transferred
  * to the list. It will be removed from memory in operations like
- * #listRemoveAll or #listRemove
+ * #listRemoveAll, #listRemoveFromIndex or #listRemove
  * 
  * @param list The address of the list to which the element
  * must be inserted
@@ -161,7 +183,7 @@ ListResultCode listMoveBack(ListIterator *iterator);
  * in invalid position in list
  * @return Returns LIST_RC_FAIL if failed for generic reasons
  */
-ListResultCode listInsert(List *list, unsigned long position, void *element);
+ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element);
 
 /**
  * @brief Insert an element to the front of the list

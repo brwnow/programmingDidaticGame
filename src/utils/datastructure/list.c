@@ -50,6 +50,28 @@ static ListResultCode insertFirstNode(List *list, void *element) {
     return LIST_RC_OK;
 }
 
+// Insert a node in place of a given positionNode.
+static inline ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
+    if(list == NULL || positionNode == NULL)
+        return LIST_RC_FAIL;
+
+    // If inserting in first position of the list
+    if(positionNode->prev == NULL)
+        return listPushFront(list, element);
+
+    Node *newNode = createNode(element, NULL, NULL);
+    if(newNode == NULL)
+        return LIST_RC_OUT_OF_MEMORY;
+
+    // Attaching new node to the d-linked list
+    newNode->prev = positionNode->prev;
+    newNode->next = positionNode;
+    positionNode->prev->next = newNode;
+    positionNode->prev = newNode;
+
+    return LIST_RC_OK;
+}
+
 // ==============
 // PUBLIC SECTION
 // ==============
@@ -191,7 +213,14 @@ ListResultCode listMoveBack(ListIterator *iterator) {
     return LIST_RC_OK;
 }
 
-ListResultCode listInsert(List *list, unsigned long position, void *element) {
+ListResultCode listInsert(List *list, ListIterator *iterator, void *element) {
+    if(iterator == NULL)
+        return LIST_RC_FAIL;
+
+    return insertAtNode(list, iterator->currentNode, element);
+}
+
+ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element) {
     if(list == NULL)
         return LIST_RC_FAIL;
 
@@ -209,28 +238,8 @@ ListResultCode listInsert(List *list, unsigned long position, void *element) {
         ListResultCode ret = LIST_RC_FAIL;
 
         ret = listFindElement(list, position, &iterator);
-        if(ret != LIST_RC_OK) {
-            // Note that it's not the case of inserting out of bounds
-            // because it was previsouly verified if position is greater than
-            // list number of elements
-            ret = LIST_RC_FAIL;
-        }
-
-        Node *foundNode = NULL;
-        Node *newNode = NULL;
-        if(ret == LIST_RC_OK) {
-            foundNode = (Node*)(iterator->currentNode);
-            newNode = createNode(element, foundNode->prev, foundNode);
-
-            if(newNode == NULL) // It was not possible to allocate memory for the new node
-                ret = LIST_RC_FAIL;
-        }
-
-        if(ret == LIST_RC_OK) { // If everything went ok, effectively insert the new node
-            foundNode->prev->next = newNode;
-            foundNode->prev = newNode;
-            ++(list->elementsCount);
-        }
+        if(ret != LIST_RC_FAIL)
+            ret = listInsert(list, iterator, element);
 
         if(iterator != NULL)
             free(iterator);
