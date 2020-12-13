@@ -71,7 +71,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopFrontNullPtr);
 // Passing null pointer to listPopBack
 MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr);
 
-// Passing null pointer to listRemove
+// Passing null pointer to listRemoveFromIndex
 MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr);
 
 // Passing null pointer to listRemoveAll
@@ -813,7 +813,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
-    munit_assert_long(listRemove(NULL, 0UL), ==, LIST_RC_FAIL);
+    munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_RC_FAIL);
 
     return MUNIT_OK;
 }
@@ -884,7 +884,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemove) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listRemove(list, 0UL), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+    munit_assert_ulong(listRemoveFromIndex(list, 0UL), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -1046,7 +1046,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemove) {
     munit_assert_ulong(listGetElementsCount(list), ==, 16UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
-        munit_assert_long(listRemove(list, indexesToRemove[i]), ==, LIST_RC_OK);
+        munit_assert_long(listRemoveFromIndex(list, indexesToRemove[i]), ==, LIST_RC_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
@@ -1103,7 +1103,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
         case 0:
         case 1:
         case 2:
-            ret = listRemove(list, position);
+            ret = listRemoveFromIndex(list, position);
             break;
 
         case 3:
@@ -1146,7 +1146,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listRemove(list, 4UL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listRemoveFromIndex(list, 4UL), ==, LIST_RC_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;

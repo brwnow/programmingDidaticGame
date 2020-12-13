@@ -288,7 +288,7 @@ ListResultCode listPushBack(List *list, void *element) {
     }
 }
 
-ListResultCode listRemove(List *list, unsigned long position) {
+ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
     if(list == NULL)
         return LIST_RC_FAIL;
 

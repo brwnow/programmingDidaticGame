@@ -236,7 +236,7 @@ ListResultCode listPushBack(List *list, void *element);
  * from an invalid position in list
  * @return Returns LIST_RC_FAIL if failed for generic reasons
  */
-ListResultCode listRemove(List *list, unsigned long position);
+ListResultCode listRemoveFromIndex(List *list, unsigned long position);
 
 /**
  * @brief Remove the first element from the list
