@@ -7,19 +7,10 @@
 // PRIVATE SECTION
 // ===============
 
-typedef struct _Node {
-    void *data;
-    struct _Node *prev;
-    struct _Node *next;
-} Node;
+#include "utils/datastructure/list_private.h"
 
-struct _List {
-    Node *firstNode;
-    Node *lastNode;
-    unsigned long elementsCount;
-};
-
-static Node* createNode(void *data, Node *previous, Node *next) {
+// Create a node and return NULL if it failed to allocate memory for teh new node
+static inline Node* createNode(void *data, Node *previous, Node *next) {
     Node *newNode = (Node*)malloc(sizeof(Node));
 
     if(newNode == NULL)
@@ -32,7 +23,8 @@ static Node* createNode(void *data, Node *previous, Node *next) {
     return newNode;
 }
 
-static ListResultCode insertFirstNode(List *list, void *element) {
+// This function insert the first node ever of the list (it's not pushfront)
+static inline ListResultCode insertFirstNode(List *list, void *element) {
     if(list == NULL)
         return LIST_RC_FAIL;
 
@@ -150,7 +142,7 @@ ListResultCode listFindElement(List *list, unsigned long position, ListIterator 
     if(position >= list->elementsCount)
         return LIST_RC_OUT_OF_BOUNDS;
 
-    // Whether the search must happend forward or backward
+    // Whether the search must happen forward or backward for performance reasons.
     bool moveForward = position <= list->elementsCount / 2UL;
 
     Node *currentNode = moveForward ? list->firstNode : list->lastNode;
