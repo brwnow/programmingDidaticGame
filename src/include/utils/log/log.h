@@ -5,11 +5,6 @@
 
 #include <SDL_log.h>
 
-// For while activating log when building debug binaries
-#ifdef _DEBUG_BUILD_
-    #define _ENABLE_LOGS_
-#endif // _DEBUG_BUILD_
-
 #ifdef _ENABLE_LOGS_
     #define MAX_LOG_INDENTATION 65
 

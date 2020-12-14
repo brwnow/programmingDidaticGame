@@ -36,7 +36,7 @@ IF /I "%1" == "debug" (
     REM Debug build configurations
     set BUILD_MODE=debug
     set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -g
-    set BUILD_COMPILE_DEFINES=%BUILD_COMPILE_DEFINES% -D_DEBUG_BUILD_
+    set BUILD_COMPILE_DEFINES=%BUILD_COMPILE_DEFINES% -D_DEBUG_BUILD_ -D_ENABLE_LOGS_
     set BUILD_LINKING_FLAGS=%BUILD_LINKING_FLAGS% -mconsole
 ) ELSE (
     REM Release build configurations
@@ -55,6 +55,7 @@ echo Build starting
 echo ----------------------------------------
 echo build target: %BUILD_MODE%
 echo compiler flags: %BUILD_COMPILE_FLAGS%
+echo compiler defines: %BUILD_COMPILE_DEFINES%
 echo linking flags: %BUILD_LINKING_FLAGS%
 echo ----------------------------------------
 
