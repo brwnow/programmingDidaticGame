@@ -1,5 +1,7 @@
 #include <munit.h>
 
+#include "utils/log/log.h"
+
 MunitSuite windowTestsGetSuite(void);
 MunitSuite listTestsGetSuite(void);
 
@@ -17,6 +19,8 @@ static const MunitSuite suite = {
 int main(int argc, char *argv[]) {
     allTestSuites[0] = windowTestsGetSuite();
     allTestSuites[1] = listTestsGetSuite();
+
+    logInit();
 
     return munit_suite_main(&suite, NULL, argc, argv);
 }
