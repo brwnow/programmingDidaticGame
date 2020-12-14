@@ -14,7 +14,7 @@ IF EXIST %BUILD_CFG_FILE% (
 echo.
 echo ======= BUILDING GAME =======
 echo.
-CALL build.bat %1
+CALL build.bat %1 test
 
 echo.
 echo ======= BUILDING TESTS =======

@@ -10,7 +10,7 @@
 #include "utils/datastructure/list_private.h"
 
 // Create a node and return NULL if it failed to allocate memory for teh new node
-static inline Node* createNode(void *data, Node *previous, Node *next) {
+private Node* createNode(void *data, Node *previous, Node *next) {
     Node *newNode = (Node*)malloc(sizeof(Node));
 
     if(newNode != NULL) {
@@ -23,7 +23,7 @@ static inline Node* createNode(void *data, Node *previous, Node *next) {
 }
 
 // This function insert the first node ever of the list (it's not pushfront)
-static inline ListResultCode insertFirstNode(List *list, void *element) {
+private ListResultCode insertFirstNode(List *list, void *element) {
     if(list == NULL)
         return LIST_RC_FAIL;
 
@@ -42,7 +42,7 @@ static inline ListResultCode insertFirstNode(List *list, void *element) {
 }
 
 // Insert a node in place of a given positionNode.
-static inline ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
+private ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
     ListResultCode ret = LIST_RC_OK;
 
     if(list == NULL || positionNode == NULL)
@@ -72,7 +72,7 @@ static inline ListResultCode insertAtNode(List *list, Node *positionNode, void *
 }
 
 // Removes a given node from the list
-static inline ListResultCode removeNode(List *list, Node *positionNode) {
+private ListResultCode removeNode(List *list, Node *positionNode) {
     ListResultCode ret = LIST_RC_OK;
 
     if(list == NULL || positionNode == NULL)

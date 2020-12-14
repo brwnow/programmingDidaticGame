@@ -1,6 +1,8 @@
 #ifndef _DIDATIC_GAME_LIST_H_
 #define _DIDATIC_GAME_LIST_H_
 
+#include "definitions/global.h"
+
 typedef struct _List List;
 
 typedef struct _ListIterator {

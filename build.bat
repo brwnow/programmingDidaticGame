@@ -44,6 +44,10 @@ IF /I "%1" == "debug" (
     set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -O2
 )
 
+IF /I "%2" == "test" (
+    set BUILD_COMPILE_DEFINES=%BUILD_COMPILE_DEFINES% -D_TESTS_ENABLED_
+)
+
 REM Build cleanup
 IF EXIST build\%BUILD_MODE% (
     rmdir /S /Q build\%BUILD_MODE%
