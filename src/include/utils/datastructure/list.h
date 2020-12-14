@@ -158,8 +158,7 @@ ListResultCode listMoveBack(ListIterator *iterator);
  * to be inserted
  *
  * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to insert
- * in invalid position in list
+ * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Returns LIST_RC_FAIL if failed for generic reasons
  */
 ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
@@ -181,6 +180,7 @@ ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
  * @return On success returns LIST_RC_OK
  * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to insert
  * in invalid position in list
+ * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Returns LIST_RC_FAIL if failed for generic reasons
  */
 ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element);
@@ -198,6 +198,7 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
  * to be inserted
  * 
  * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Otherwise returns LIST_RC_FAIL
  */
 ListResultCode listPushFront(List *list, void *element);
@@ -213,6 +214,7 @@ ListResultCode listPushFront(List *list, void *element);
  * to be inserted
  * 
  * @return On success returns LIST_RC_OK
+ * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Otherwise returns LIST_RC_FAIL
  */
 ListResultCode listPushBack(List *list, void *element);
