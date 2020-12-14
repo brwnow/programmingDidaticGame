@@ -26,19 +26,23 @@ IF EXIST %BUILD_CFG_FILE% (
 REM Setting up PATH to avoid missing .dll while running gcc.exe
 set PATH=%PATH%;%TOOLCHAIN_PATH%
 
-REM Setting up build configurations
-set BUILD_COMPILE_FLAGS=-O2
+REM Setting up default build configurations
+set BUILD_COMPILE_FLAGS=-Wall -Wextra -Werror -std=c17
+set BUILD_COMPILE_DEFINES=
 set BUILD_LINKING_FLAGS=-mwindows
+set BUILD_COMPILE_INCLUDE_PATHS=-I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include
 
-IF /I "%BUILD_MODE%" == "debug" (
+IF /I "%1" == "debug" (
+    REM Debug build configurations
     set BUILD_MODE=debug
-    set BUILD_COMPILE_FLAGS=-D_DEBUG_BUILD_ -g
-    set BUILD_LINKING_FLAGS=-mconsole -mwindows
+    set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -g
+    set BUILD_COMPILE_DEFINES=%BUILD_COMPILE_DEFINES% -D_DEBUG_BUILD_
+    set BUILD_LINKING_FLAGS=%BUILD_LINKING_FLAGS% -mconsole
 ) ELSE (
+    REM Release build configurations
     set BUILD_MODE=release
+    set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -O2
 )
-
-set BUILD_COMPILE_FLAGS=%BUILD_COMPILE_FLAGS% -Wall -Wextra -Werror -std=c17
 
 REM Build cleanup
 IF EXIST build\%BUILD_MODE% (
@@ -56,50 +60,33 @@ echo ----------------------------------------
 
 REM Game binary building
 
-set BUILD_COMPILE_INCLUDE_PATHS=-I%LIBSDL_PATH%\include\SDL2 -I%LIBSDLTTF_PATH%\include\SDL2 -Isrc\include
-
 REM Game binary compilation
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\main.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\log\log.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\log.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\datastructure\list.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\list.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\events.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\events.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\keyboard.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\keyboard.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\video.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\video.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% -o build\%BUILD_MODE%\window.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\main.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\main.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\log\log.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\log.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\utils\datastructure\list.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\list.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\events.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\events.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\keyboard.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\keyboard.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\video.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\video.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\window.o
 
 REM Game binary linking
-%TOOLCHAIN_PATH%\%C_COMPILER% build\%BUILD_MODE%\main.o build\%BUILD_MODE%\log.o build\%BUILD_MODE%\list.o build\%BUILD_MODE%\events.o build\%BUILD_MODE%\keyboard.o build\%BUILD_MODE%\video.o build\%BUILD_MODE%\window.o -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib %BUILD_LINKING_FLAGS% -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\%BUILD_MODE%\brenoGame.exe
-
-REM Tests build cleanup
-IF EXIST build/tests (
-    rmdir /S /Q build\tests
-)
-
-mkdir build\tests
-
-REM Tests building
-
-REM Tests compilation
-set TEST_COMPILATION_PARAMS=-g -Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17
-set TEST_COMPILATION_INCLUDE_PATHS=-Itests -Isrc\include
-%TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\munit.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c %TEST_COMPILATION_INCLUDE_PATHS% -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\window_tests.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c %TEST_COMPILATION_INCLUDE_PATHS% -Imunit %TEST_COMPILATION_PARAMS% -o build\tests\list_tests.o
-
-set BUILD_OBJECTS_NEEDED_BY_TEST=build\%BUILD_MODE%\list.o
-
-REM Tests linking
-%TOOLCHAIN_PATH%\%C_COMPILER% build\tests\main.o build\tests\munit.o build\tests\window_tests.o build\tests\list_tests.o %BUILD_OBJECTS_NEEDED_BY_TEST% -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib -mconsole -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -o build\tests\tests.exe
+%TOOLCHAIN_PATH%\%C_COMPILER%   build\%BUILD_MODE%\main.o^
+                                build\%BUILD_MODE%\log.o^
+                                build\%BUILD_MODE%\list.o^
+                                build\%BUILD_MODE%\events.o^
+                                build\%BUILD_MODE%\keyboard.o^
+                                build\%BUILD_MODE%\video.o^
+                                build\%BUILD_MODE%\window.o^
+                                -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib^
+                                -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf^
+                                %BUILD_LINKING_FLAGS%^
+                                -o build\%BUILD_MODE%\brenoGame.exe
 
 REM Installation cleanup
 rmdir /S /Q install\%BUILD_MODE%
 mkdir install\%BUILD_MODE%
 mkdir install\%BUILD_MODE%\res
 mkdir install\%BUILD_MODE%\res\fonts
-
-rmdir /S /Q install\tests
-mkdir install\tests
 
 REM Installing
 REM Moving build binary and needed libraries
@@ -109,6 +96,3 @@ copy /B /Y build\%BUILD_MODE%\brenoGame.exe install\%BUILD_MODE%
 
 REM Moving resources files
 copy /B /Y resources\fonts\*.ttf install\%BUILD_MODE%\res\fonts
-
-REM Moving test binary
-copy /B /Y build\tests\tests.exe install\tests
