@@ -4,12 +4,11 @@
 #include "definitions/global.h"
 
 typedef struct _List List;
+typedef struct _Node Node;
 
 typedef struct _ListIterator {
     void *data;
-
-    // void pointer to encapsulate the internal list node structure
-    void *currentNode;
+    Node *currentNode;
 } ListIterator;
 
 /**
