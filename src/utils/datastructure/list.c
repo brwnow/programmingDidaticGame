@@ -13,12 +13,11 @@
 static inline Node* createNode(void *data, Node *previous, Node *next) {
     Node *newNode = (Node*)malloc(sizeof(Node));
 
-    if(newNode == NULL)
-        return NULL;
-
-    newNode->data = data;
-    newNode->prev = previous;
-    newNode->next = next;
+    if(newNode != NULL) {
+        newNode->data = data;
+        newNode->prev = previous;
+        newNode->next = next;
+    }
 
     return newNode;
 }
@@ -44,24 +43,32 @@ static inline ListResultCode insertFirstNode(List *list, void *element) {
 
 // Insert a node in place of a given positionNode.
 static inline ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
+    ListResultCode ret = LIST_RC_OK;
+
     if(list == NULL || positionNode == NULL)
-        return LIST_RC_FAIL;
+        ret = LIST_RC_FAIL;
 
-    // If inserting in first position of the list
-    if(positionNode->prev == NULL)
-        return listPushFront(list, element);
+    if(ret == LIST_RC_OK) {
+        if(positionNode->prev == NULL) { // If inserting in first position of the list
+            ret = listPushFront(list, element);
+        } else {
+            Node *newNode = createNode(element, NULL, NULL);
+            if(newNode == NULL)
+                ret = LIST_RC_OUT_OF_MEMORY;
 
-    Node *newNode = createNode(element, NULL, NULL);
-    if(newNode == NULL)
-        return LIST_RC_OUT_OF_MEMORY;
+            if(ret == LIST_RC_OK) {
+                // Attaching new node to the d-linked list
+                newNode->prev = positionNode->prev;
+                newNode->next = positionNode;
+                positionNode->prev->next = newNode;
+                positionNode->prev = newNode;
 
-    // Attaching new node to the d-linked list
-    newNode->prev = positionNode->prev;
-    newNode->next = positionNode;
-    positionNode->prev->next = newNode;
-    positionNode->prev = newNode;
+                ++(list->elementsCount);
+            }
+        }
+    }
 
-    return LIST_RC_OK;
+    return ret;
 }
 
 // ==============
@@ -230,7 +237,7 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
         ListResultCode ret = LIST_RC_FAIL;
 
         ret = listFindElement(list, position, &iterator);
-        if(ret != LIST_RC_FAIL)
+        if(ret == LIST_RC_OK)
             ret = listInsert(list, iterator, element);
 
         if(iterator != NULL)
