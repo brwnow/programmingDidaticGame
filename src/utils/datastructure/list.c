@@ -71,6 +71,32 @@ static inline ListResultCode insertAtNode(List *list, Node *positionNode, void *
     return ret;
 }
 
+// Removes a given node from the list
+static inline ListResultCode removeNode(List *list, Node *positionNode) {
+    ListResultCode ret = LIST_RC_OK;
+
+    if(list == NULL || positionNode == NULL)
+        ret = LIST_RC_FAIL;
+
+    if(ret == LIST_RC_OK) {
+        if(positionNode->prev == NULL) { // If removing from first position
+            ret = listPopFront(list);
+        } else if(positionNode->next == NULL) { // If removing from last position
+            ret = listPopBack(list);
+        } else {
+            positionNode->prev->next = positionNode->next;
+            positionNode->next->prev = positionNode->prev;
+
+            free(positionNode->data);
+            free(positionNode);
+
+            --(list->elementsCount);
+        }
+    }
+
+    return ret;
+}
+
 // ==============
 // PUBLIC SECTION
 // ==============
@@ -287,6 +313,25 @@ ListResultCode listPushBack(List *list, void *element) {
     }
 }
 
+ListResultCode listRemove(List *list, ListIterator *iterator) {
+    if(iterator == NULL || iterator->currentNode == NULL)
+        return LIST_RC_FAIL;
+
+    Node *currentNode = iterator->currentNode;
+    Node *nextNode = currentNode->next;
+    ListResultCode ret = removeNode(list, currentNode);
+
+    // On success, sets the iterator to the next node
+    if(ret == LIST_RC_OK) {
+        iterator->currentNode = nextNode;
+
+        if(nextNode != NULL)
+            iterator->data = nextNode->data;
+    }
+
+    return ret;
+}
+
 ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
     if(list == NULL)
         return LIST_RC_FAIL;
@@ -306,22 +351,8 @@ ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
         ListResultCode ret = LIST_RC_FAIL;
 
         ret = listFindElement(list, position, &iterator);
-        if(ret != LIST_RC_OK) {
-            // Note that it's not the case of inserting out of bounds
-            // because it was previsouly verified if position is greater than
-            // list number of elements
-            ret = LIST_RC_FAIL;
-        }
-
-        if(ret == LIST_RC_OK) { // If everything went ok, effectively remove the node
-            Node *foundNode = iterator->currentNode;
-            foundNode->prev->next = foundNode->next;
-            foundNode->next->prev = foundNode->prev;
-
-            free(foundNode->data);
-            free(foundNode);
-            --(list->elementsCount);
-        }
+        if(ret == LIST_RC_OK)
+            ret = listRemove(list, iterator);
 
         if(iterator != NULL)
             free(iterator);

@@ -218,6 +218,25 @@ ListResultCode listPushFront(List *list, void *element);
 ListResultCode listPushBack(List *list, void *element);
 
 /**
+ * @brief Remove an element from the list at the position pointed by an iterator
+ * 
+ * This operation remove an element
+ * When an element is removed from the list, it's data is
+ * removed from memory because it's ownership belongs to
+ * the list
+ * 
+ * @param list The address of the list from which the element
+ * must be removed
+ * @param iterator An iterator pointing to the position of
+ * the list where to remove an element
+ * 
+ * @return On success returns LIST_RC_OK
+ * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_RC_FAIL if failed for generic reasons
+ */
+ListResultCode listRemove(List *list, ListIterator *iterator);
+
+/**
  * @brief Remove an element from the list
  * 
  * This operation remove an element
