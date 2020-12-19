@@ -9,7 +9,7 @@
 
 #include "utils/datastructure/list_private.h"
 
-// Create a node and return NULL if it failed to allocate memory for teh new node
+// Create a node and return NULL if it failed to allocate memory for the new node
 private Node* createNode(void *data, Node *previous, Node *next) {
     Node *newNode = (Node*)malloc(sizeof(Node));
 
@@ -20,6 +20,18 @@ private Node* createNode(void *data, Node *previous, Node *next) {
     }
 
     return newNode;
+}
+
+// Create an iterator and return NULL if failed allocation memory for the iterator
+private ListIterator* createIterator(void *data, Node *currentNode) {
+    ListIterator *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+
+    if(iterator != NULL) {
+        iterator->data = data;
+        iterator->currentNode = currentNode;
+    }
+
+    return iterator;
 }
 
 // This function insert the first node ever of the list (it's not pushfront)
@@ -139,13 +151,10 @@ ListResultCode listGetBegin(List *list, ListIterator **iterator) {
     if(list->elementsCount == 0UL)
         return LIST_RC_FIND_NOT_FOUND;
 
-    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+    *iterator = createIterator(list->firstNode->data, list->firstNode);
 
     if(*iterator == NULL)
         return LIST_RC_OUT_OF_MEMORY;
-
-    (*iterator)->data = list->firstNode->data;
-    (*iterator)->currentNode = list->firstNode;
 
     return LIST_RC_OK;
 }
@@ -157,13 +166,10 @@ ListResultCode listGetEnd(List *list, ListIterator **iterator) {
     if(list->elementsCount == 0UL)
         return LIST_RC_FIND_NOT_FOUND;
 
-    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+    *iterator = createIterator(list->lastNode->data, list->lastNode);
 
     if(*iterator == NULL)
         return LIST_RC_OUT_OF_MEMORY;
-
-    (*iterator)->data = list->lastNode->data;
-    (*iterator)->currentNode = list->lastNode;
 
     return LIST_RC_OK;
 }
@@ -190,13 +196,11 @@ ListResultCode listFindElement(List *list, unsigned long position, ListIterator 
         }
     }
 
-    *iterator = (ListIterator*)malloc(sizeof(ListIterator));
+    *iterator = createIterator(currentNode->data, currentNode);
 
     if(*iterator == NULL)
         return LIST_RC_OUT_OF_MEMORY;
 
-    (*iterator)->data = currentNode->data;
-    (*iterator)->currentNode = currentNode;
     return LIST_RC_OK;
 }
 
