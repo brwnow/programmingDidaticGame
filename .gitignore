@@ -10,3 +10,6 @@ build_config.bat
 
 ## Local vscode settings dir
 .vscode/*
+
+## Local personal files
+TODO.txt
