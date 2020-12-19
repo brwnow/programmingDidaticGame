@@ -507,7 +507,7 @@ MUNIT_DECLARE_TEST_FUNC(listGetElementsCount) {
 // INSERTING
 
 MUNIT_DECLARE_TEST_FUNC(listPushFrontNullPtr) {
-    munit_assert_long(listPushFront(NULL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listPushFront(NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -515,7 +515,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushFrontNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
-    munit_assert_long(listPushBack(NULL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listPushBack(NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -523,7 +523,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
-    munit_assert_long(listInsert(NULL, NULL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listInsert(NULL, NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -531,7 +531,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listInsertIndexNullPtr) {
-    munit_assert_long(listInsertAtIndex(NULL, 0UL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listInsertAtIndex(NULL, 0UL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -557,13 +557,13 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushFront) {
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
         *elem = elems[i];
-        munit_assert_long(listPushFront(list, elem), ==, LIST_RC_OK);
+        munit_assert_long(listPushFront(list, elem), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
 
     for(int i = elemsCount - 1; i >= 0; --i) {
         munit_assert_not_null(it);
@@ -572,7 +572,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushFront) {
         munit_assert_int(val, ==, elems[(size_t)i]);
 
         if(i > 0)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -601,13 +601,13 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushBack) {
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
         *elem = elems[i];
-        munit_assert_long(listPushBack(list, elem), ==, LIST_RC_OK);
+        munit_assert_long(listPushBack(list, elem), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
 
     for(size_t i = 0; i < elemsCount; --i) {
         munit_assert_not_null(it);
@@ -616,7 +616,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushBack) {
         munit_assert_int(val, ==, elems[(size_t)i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -640,7 +640,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_long(listInsert(list, NULL, NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listInsert(list, NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -666,13 +666,13 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsertIndex) {
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
         *elem = elems[i];
-        munit_assert_long(listInsertAtIndex(list, i, elem), ==, LIST_RC_OK);
+        munit_assert_long(listInsertAtIndex(list, i, elem), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
 
     for(size_t i = 0; i < elemsCount; ++i) {
         munit_assert_not_null(it);
@@ -681,7 +681,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsertIndex) {
         munit_assert_int(val, ==, elems[i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -722,21 +722,21 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertIndexVariablePositions) {
 
     char *elem = (char*)malloc(sizeof(char));
     *elem = elems[1];
-    munit_assert_long(listInsertAtIndex(list, 1, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 1, elem), ==, LIST_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[4];
-    munit_assert_long(listInsertAtIndex(list, 3, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 3, elem), ==, LIST_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[2];
-    munit_assert_long(listInsertAtIndex(list, 2, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 2, elem), ==, LIST_OK);
     elem = (char*)malloc(sizeof(char));
     *elem = elems[5];
-    munit_assert_long(listInsertAtIndex(list, 5, elem), ==, LIST_RC_OK);
+    munit_assert_long(listInsertAtIndex(list, 5, elem), ==, LIST_OK);
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
     munit_assert_not_null(it);
 
     for(size_t i = 0; i < elemsCount; ++i) {
@@ -746,7 +746,7 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertIndexVariablePositions) {
         munit_assert_int(val, ==, elems[i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -778,7 +778,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexLargeAmount) {
     for(size_t i = 0; i < amountToBeInserted; ++i) {
         int insertMethod = munit_rand_int_range(0, 2);
         unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list));
-        ListResultCode ret = LIST_RC_FAIL;
+        ListResultCode ret = LIST_FAIL;
 
         switch (insertMethod)
         {
@@ -795,7 +795,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexLargeAmount) {
             break;
         }
 
-        munit_assert_ulong(ret, ==, LIST_RC_OK);
+        munit_assert_ulong(ret, ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, amountToBeInserted + 1);
@@ -825,7 +825,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexInInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listInsertAtIndex(list, 5UL, NULL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listInsertAtIndex(list, 5UL, NULL), ==, LIST_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;
@@ -834,7 +834,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexInInvalidPosition) {
 // REMOVING
 
 MUNIT_DECLARE_TEST_FUNC(listPopFrontNullPtr) {
-    munit_assert_long(listPopFront(NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listPopFront(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -842,7 +842,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopFrontNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
-    munit_assert_long(listPopBack(NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listPopBack(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -850,7 +850,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
-    munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_RC_FAIL);
+    munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -858,7 +858,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listRemoveAllNullPtr) {
-    munit_assert_long(listRemoveAll(NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listRemoveAll(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -879,7 +879,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopFront) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listPopFront(list), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+    munit_assert_ulong(listPopFront(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -900,7 +900,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopBack) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listPopBack(list), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+    munit_assert_ulong(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -921,7 +921,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemove) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listRemoveFromIndex(list, 0UL), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+    munit_assert_ulong(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -942,7 +942,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemoveAllElements) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listRemoveAll(list), ==, LIST_RC_REMOVE_ALREADY_EMPTY);
+    munit_assert_ulong(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -976,13 +976,13 @@ MUNIT_DECLARE_TEST_FUNC(listPopFront) {
     munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
-        munit_assert_long(listPopFront(list), ==, LIST_RC_OK);
+        munit_assert_long(listPopFront(list), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
     munit_assert_not_null(it);
 
     for(size_t i = 0; i < elemsCount; ++i) {
@@ -992,7 +992,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopFront) {
         munit_assert_int(val, ==, remainingElems[i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -1029,13 +1029,13 @@ MUNIT_DECLARE_TEST_FUNC(listPopBack) {
     munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
-        munit_assert_long(listPopBack(list), ==, LIST_RC_OK);
+        munit_assert_long(listPopBack(list), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
     munit_assert_not_null(it);
 
     for(size_t i = 0; i < elemsCount; ++i) {
@@ -1045,7 +1045,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopBack) {
         munit_assert_int(val, ==, remainingElems[i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -1083,13 +1083,13 @@ MUNIT_DECLARE_TEST_FUNC(listRemove) {
     munit_assert_ulong(listGetElementsCount(list), ==, 16UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
-        munit_assert_long(listRemoveFromIndex(list, indexesToRemove[i]), ==, LIST_RC_OK);
+        munit_assert_long(listRemoveFromIndex(list, indexesToRemove[i]), ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
     ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_RC_OK);
+    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
     munit_assert_not_null(it);
 
     for(size_t i = 0; i < elemsCount; ++i) {
@@ -1099,7 +1099,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemove) {
         munit_assert_int(val, ==, remainingElems[i]);
 
         if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_RC_OK);
+            munit_assert_long(listMoveNext(it), ==, LIST_OK);
     }
 
     free(it);
@@ -1133,7 +1133,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
     for(size_t i = 0; i < 25000; ++i) {
         int removeMethod = munit_rand_int_range(0, 4);
         unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list) - 1);
-        ListResultCode ret = LIST_RC_FAIL;
+        ListResultCode ret = LIST_FAIL;
 
         switch (removeMethod)
         {
@@ -1152,7 +1152,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
             break;
         }
 
-        munit_assert_ulong(ret, ==, LIST_RC_OK);
+        munit_assert_ulong(ret, ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
@@ -1183,7 +1183,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listRemoveFromIndex(list, 4UL), ==, LIST_RC_OUT_OF_BOUNDS);
+    munit_assert_ulong(listRemoveFromIndex(list, 4UL), ==, LIST_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;
@@ -1212,7 +1212,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 75000UL);
 
-    munit_assert_ulong(listRemoveAll(list), ==, LIST_RC_OK);
+    munit_assert_ulong(listRemoveAll(list), ==, LIST_OK);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
     return MUNIT_OK;
@@ -1225,7 +1225,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
 // DESTROYING
 
 MUNIT_DECLARE_TEST_FUNC(listDestroyNullPtr) {
-    munit_assert_long(listDestroy(NULL), ==, LIST_RC_FAIL);
+    munit_assert_long(listDestroy(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -1247,7 +1247,7 @@ MUNIT_DECLARE_TEST_FUNC(listDestroyNotEmpty) {
 
     ListResultCode ret = listDestroy(list);
 
-    munit_assert_long(ret, ==, LIST_RC_OK);
+    munit_assert_long(ret, ==, LIST_OK);
 
     return MUNIT_OK;
 }
@@ -1266,7 +1266,7 @@ MUNIT_DECLARE_TEST_FUNC(listDestroyEmpty) {
 
     ListResultCode ret = listDestroy(list);
 
-    munit_assert_long(ret, ==, LIST_RC_OK);
+    munit_assert_long(ret, ==, LIST_OK);
 
     return MUNIT_OK;
 }

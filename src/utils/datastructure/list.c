@@ -37,38 +37,38 @@ private ListIterator* createIterator(void *data, Node *currentNode) {
 // This function insert the first node ever of the list (it's not pushfront)
 private ListResultCode insertFirstNode(List *list, void *element) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount > 0UL)
-        return LIST_RC_FAIL; // List not empty. First node was already inserted
+        return LIST_FAIL; // List not empty. First node was already inserted
 
     Node *firstNode = createNode(element, NULL, NULL);
 
     if(firstNode == NULL)
-        return LIST_RC_OUT_OF_MEMORY; // Failed to allocated memory for the first node
+        return LIST_OUT_OF_MEMORY; // Failed to allocated memory for the first node
 
     list->firstNode = list->lastNode = firstNode;
     list->elementsCount = 1UL;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 // Insert a node in place of a given positionNode.
 private ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
-    ListResultCode ret = LIST_RC_OK;
+    ListResultCode ret = LIST_OK;
 
     if(list == NULL || positionNode == NULL)
-        ret = LIST_RC_FAIL;
+        ret = LIST_FAIL;
 
-    if(ret == LIST_RC_OK) {
+    if(ret == LIST_OK) {
         if(positionNode->prev == NULL) { // If inserting in first position of the list
             ret = listPushFront(list, element);
         } else {
             Node *newNode = createNode(element, NULL, NULL);
             if(newNode == NULL)
-                ret = LIST_RC_OUT_OF_MEMORY;
+                ret = LIST_OUT_OF_MEMORY;
 
-            if(ret == LIST_RC_OK) {
+            if(ret == LIST_OK) {
                 // Attaching new node to the d-linked list
                 newNode->prev = positionNode->prev;
                 newNode->next = positionNode;
@@ -85,12 +85,12 @@ private ListResultCode insertAtNode(List *list, Node *positionNode, void *elemen
 
 // Removes a given node from the list
 private ListResultCode removeNode(List *list, Node *positionNode) {
-    ListResultCode ret = LIST_RC_OK;
+    ListResultCode ret = LIST_OK;
 
     if(list == NULL || positionNode == NULL)
-        ret = LIST_RC_FAIL;
+        ret = LIST_FAIL;
 
-    if(ret == LIST_RC_OK) {
+    if(ret == LIST_OK) {
         if(positionNode->prev == NULL) { // If removing from first position
             ret = listPopFront(list);
         } else if(positionNode->next == NULL) { // If removing from last position
@@ -129,12 +129,12 @@ List* listCreate(void) {
 ListResultCode listDestroy(List *list) {
     ListResultCode ret = listRemoveAll(list);
 
-    if(ret < LIST_RC_OK)
-        return LIST_RC_FAIL;
+    if(ret < LIST_OK)
+        return LIST_FAIL;
 
     free(list);
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 unsigned long listGetElementsCount(List *list) {
@@ -146,40 +146,40 @@ unsigned long listGetElementsCount(List *list) {
 
 ListResultCode listGetBegin(List *list, ListIterator **iterator) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
-        return LIST_RC_FIND_NOT_FOUND;
+        return LIST_FIND_NOT_FOUND;
 
     *iterator = createIterator(list->firstNode->data, list->firstNode);
 
     if(*iterator == NULL)
-        return LIST_RC_OUT_OF_MEMORY;
+        return LIST_OUT_OF_MEMORY;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listGetEnd(List *list, ListIterator **iterator) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
-        return LIST_RC_FIND_NOT_FOUND;
+        return LIST_FIND_NOT_FOUND;
 
     *iterator = createIterator(list->lastNode->data, list->lastNode);
 
     if(*iterator == NULL)
-        return LIST_RC_OUT_OF_MEMORY;
+        return LIST_OUT_OF_MEMORY;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listFindElement(List *list, unsigned long position, ListIterator **iterator) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(position >= list->elementsCount)
-        return LIST_RC_OUT_OF_BOUNDS;
+        return LIST_OUT_OF_BOUNDS;
 
     // Whether the search must happen forward or backward for performance reasons.
     bool moveForward = position <= list->elementsCount / 2UL;
@@ -199,62 +199,62 @@ ListResultCode listFindElement(List *list, unsigned long position, ListIterator 
     *iterator = createIterator(currentNode->data, currentNode);
 
     if(*iterator == NULL)
-        return LIST_RC_OUT_OF_MEMORY;
+        return LIST_OUT_OF_MEMORY;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listMoveNext(ListIterator *iterator) {
     if(iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     Node *currentNode = iterator->currentNode;
 
     if(currentNode == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(currentNode->next == NULL)
-        return LIST_RC_ITERATOR_END_REACHED;
+        return LIST_ITERATOR_END_REACHED;
 
     currentNode = currentNode->next;
     iterator->data = currentNode->data;
     iterator->currentNode = currentNode;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listMoveBack(ListIterator *iterator) {
     if(iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     Node *currentNode = iterator->currentNode;
 
     if(currentNode == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(currentNode->prev == NULL)
-        return LIST_RC_ITERATOR_BEGIN_REACHED;
+        return LIST_ITERATOR_BEGIN_REACHED;
 
     currentNode = currentNode->prev;
     iterator->data = currentNode->data;
     iterator->currentNode = currentNode;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listInsert(List *list, ListIterator *iterator, void *element) {
     if(iterator == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     return insertAtNode(list, iterator->currentNode, element);
 }
 
 ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(position > list->elementsCount)
-        return LIST_RC_OUT_OF_BOUNDS;
+        return LIST_OUT_OF_BOUNDS;
 
     if(list->elementsCount == 0UL) { // List is empty, inserting first element
         return insertFirstNode(list, element);
@@ -264,10 +264,10 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
         return listPushBack(list, element);
     } else { // Defult insertion case
         ListIterator *iterator;
-        ListResultCode ret = LIST_RC_FAIL;
+        ListResultCode ret = LIST_FAIL;
 
         ret = listFindElement(list, position, &iterator);
-        if(ret == LIST_RC_OK)
+        if(ret == LIST_OK)
             ret = listInsert(list, iterator, element);
 
         if(iterator != NULL)
@@ -279,7 +279,7 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
 
 ListResultCode listPushFront(List *list, void *element) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL) {
         return insertFirstNode(list, element);
@@ -287,19 +287,19 @@ ListResultCode listPushFront(List *list, void *element) {
         Node *newNode = createNode(element, NULL, list->firstNode);
 
         if(newNode == NULL)
-            return LIST_RC_FAIL;
+            return LIST_FAIL;
 
         list->firstNode->prev = newNode;
         list->firstNode = newNode;
         ++(list->elementsCount);
 
-        return LIST_RC_OK;
+        return LIST_OK;
     }
 }
 
 ListResultCode listPushBack(List *list, void *element) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL) {
         return insertFirstNode(list, element);
@@ -307,26 +307,26 @@ ListResultCode listPushBack(List *list, void *element) {
         Node *newNode = createNode(element, list->lastNode, NULL);
 
         if(newNode == NULL)
-            return LIST_RC_FAIL;
+            return LIST_FAIL;
 
         list->lastNode->next = newNode;
         list->lastNode = newNode;
         ++(list->elementsCount);
 
-        return LIST_RC_OK;
+        return LIST_OK;
     }
 }
 
 ListResultCode listRemove(List *list, ListIterator *iterator) {
     if(iterator == NULL || iterator->currentNode == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     Node *currentNode = iterator->currentNode;
     Node *nextNode = currentNode->next;
     ListResultCode ret = removeNode(list, currentNode);
 
     // On success, sets the iterator to the next node
-    if(ret == LIST_RC_OK) {
+    if(ret == LIST_OK) {
         iterator->currentNode = nextNode;
 
         if(nextNode != NULL)
@@ -338,13 +338,13 @@ ListResultCode listRemove(List *list, ListIterator *iterator) {
 
 ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
-        return LIST_RC_REMOVE_ALREADY_EMPTY;
+        return LIST_REMOVE_ALREADY_EMPTY;
 
     if(position >= list->elementsCount)
-        return LIST_RC_OUT_OF_BOUNDS;
+        return LIST_OUT_OF_BOUNDS;
 
     if(position == 0UL) { // Popping the element from front
         return listPopFront(list);
@@ -352,10 +352,10 @@ ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
         return listPopBack(list);
     } else { // Defult insertion case
         ListIterator *iterator;
-        ListResultCode ret = LIST_RC_FAIL;
+        ListResultCode ret = LIST_FAIL;
 
         ret = listFindElement(list, position, &iterator);
-        if(ret == LIST_RC_OK)
+        if(ret == LIST_OK)
             ret = listRemove(list, iterator);
 
         if(iterator != NULL)
@@ -367,10 +367,10 @@ ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
 
 ListResultCode listPopFront(List *list) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
-        return LIST_RC_REMOVE_ALREADY_EMPTY;
+        return LIST_REMOVE_ALREADY_EMPTY;
 
     Node *nodeToPop = list->firstNode;
 
@@ -385,15 +385,15 @@ ListResultCode listPopFront(List *list) {
     free(nodeToPop);
     --(list->elementsCount);
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listPopBack(List *list) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
-        return LIST_RC_REMOVE_ALREADY_EMPTY;
+        return LIST_REMOVE_ALREADY_EMPTY;
 
     Node *nodeToPop = list->lastNode;
 
@@ -408,15 +408,15 @@ ListResultCode listPopBack(List *list) {
     free(nodeToPop);
     --(list->elementsCount);
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }
 
 ListResultCode listRemoveAll(List *list) {
     if(list == NULL)
-        return LIST_RC_FAIL;
+        return LIST_FAIL;
 
     if(list->firstNode == NULL)
-        return LIST_RC_REMOVE_ALREADY_EMPTY;
+        return LIST_REMOVE_ALREADY_EMPTY;
 
     Node *currentNode = list->firstNode;
     while(currentNode != NULL) {
@@ -432,5 +432,5 @@ ListResultCode listRemoveAll(List *list) {
     list->lastNode = NULL;
     list->elementsCount = 0UL;
 
-    return LIST_RC_OK;
+    return LIST_OK;
 }

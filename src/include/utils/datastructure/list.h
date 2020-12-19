@@ -22,26 +22,26 @@ typedef enum _ListResultCode {
 /* *** ERROR CODES *** */
 
     // Memory error code
-    LIST_RC_OUT_OF_MEMORY = -1999, /**< List operation failed due to lack of memory */
+    LIST_OUT_OF_MEMORY = -1999, /**< List operation failed due to lack of memory */
 
     // Generic error code
-    LIST_RC_OUT_OF_BOUNDS = -999, /**< List operation range out of bounds */
-    LIST_RC_FAIL = -1, /**< List operation failed */
+    LIST_OUT_OF_BOUNDS = -999, /**< List operation range out of bounds */
+    LIST_FAIL = -1, /**< List operation failed */
 
 /* *** SUCCESS CODE *** */
 
     // Generic success code
-    LIST_RC_OK = 0, /**< List operation succeed */
+    LIST_OK = 0, /**< List operation succeed */
 
 /* *** WARNING CODES *** */
 
     // Warning codes related to removing elements
-    LIST_RC_REMOVE_ALREADY_EMPTY = 9000, /**< Remove operation not performed due to list is already empty */
+    LIST_REMOVE_ALREADY_EMPTY = 9000, /**< Remove operation not performed due to list is already empty */
 
     // Warning codes related to searching elements
-    LIST_RC_FIND_NOT_FOUND = 7000, /**< Element is not in the list */
-    LIST_RC_ITERATOR_BEGIN_REACHED, /**< Iterator has reached the beginning of the list */
-    LIST_RC_ITERATOR_END_REACHED /**< Iterator has reached the end of the list */
+    LIST_FIND_NOT_FOUND = 7000, /**< Element is not in the list */
+    LIST_ITERATOR_BEGIN_REACHED, /**< Iterator has reached the beginning of the list */
+    LIST_ITERATOR_END_REACHED /**< Iterator has reached the end of the list */
 
 } ListResultCode;
 
@@ -65,8 +65,8 @@ List* listCreate(void);
  * 
  * @param list The address of the list to be destroyed
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_FAIL if unable to destroy the list
+ * @return On success returns LIST_OK
+ * @return Returns LIST_FAIL if unable to destroy the list
  */
 ListResultCode listDestroy(List *list);
 
@@ -88,9 +88,9 @@ unsigned long listGetElementsCount(List *list);
  * @param iterator The address of a pointer of ListIterator where to store
  * the result ListIterator address
  * 
- * @return On success returns LIST_RC_OK and sets @p iterator with iterator for first element
- * @return On element not found returns LIST_RC_FIND_NOTFOUND
- * @return On other errros returns LIST_RC_FAIL
+ * @return On success returns LIST_OK and sets @p iterator with iterator for first element
+ * @return On element not found returns LIST_FIND_NOTFOUND
+ * @return On other errros returns LIST_FAIL
  */
 ListResultCode listGetBegin(List *list, ListIterator **iterator);
 
@@ -101,9 +101,9 @@ ListResultCode listGetBegin(List *list, ListIterator **iterator);
  * @param iterator The address of a pointer of ListIterator where to store
  * the result ListIterator address
  * 
- * @return On success returns LIST_RC_OK and sets @p iterator with iterator for last element
- * @return On element not found returns LIST_RC_FIND_NOTFOUND
- * @return On other errros returns LIST_RC_FAIL
+ * @return On success returns LIST_OK and sets @p iterator with iterator for last element
+ * @return On element not found returns LIST_FIND_NOTFOUND
+ * @return On other errros returns LIST_FAIL
  */
 ListResultCode listGetEnd(List *list, ListIterator **iterator);
 
@@ -115,9 +115,9 @@ ListResultCode listGetEnd(List *list, ListIterator **iterator);
  * @param iterator The address of a pointer of ListIterator where to store
  * the result ListIterator address
  * 
- * @return On success returns LIST_RC_OK and sets @p iterator with the result iterator
- * @return On element not found returns LIST_RC_FIND_NOTFOUND
- * @return On other errros returns LIST_RC_FAIL
+ * @return On success returns LIST_OK and sets @p iterator with the result iterator
+ * @return On element not found returns LIST_FIND_NOTFOUND
+ * @return On other errros returns LIST_FAIL
  */
 ListResultCode listFindElement(List *list, unsigned long position, ListIterator **iterator);
 
@@ -126,9 +126,9 @@ ListResultCode listFindElement(List *list, unsigned long position, ListIterator 
  * 
  * @param iterator Pointer to a ListIterator which will be moved forward
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_ITERATOR_END_REACHED if iterator has reached the last element
- * @return On other errros returns LIST_RC_FAIL
+ * @return On success returns LIST_OK
+ * @return Returns LIST_ITERATOR_END_REACHED if iterator has reached the last element
+ * @return On other errros returns LIST_FAIL
  */
 ListResultCode listMoveNext(ListIterator *iterator);
 
@@ -137,9 +137,9 @@ ListResultCode listMoveNext(ListIterator *iterator);
  * 
  * @param iterator Pointer to a ListIterator which will be moved backward
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_ITERATOR_BEGIN_REACHED if iterator has reached the first element
- * @return On other errros returns LIST_RC_FAIL
+ * @return On success returns LIST_OK
+ * @return Returns LIST_ITERATOR_BEGIN_REACHED if iterator has reached the first element
+ * @return On other errros returns LIST_FAIL
  */
 ListResultCode listMoveBack(ListIterator *iterator);
 
@@ -158,9 +158,9 @@ ListResultCode listMoveBack(ListIterator *iterator);
  * @param element A pointer to the memory that holds the element
  * to be inserted
  *
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return On success returns LIST_OK
+ * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
 
@@ -178,11 +178,11 @@ ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
  * @param element A pointer to the memory that holds the element
  * to be inserted
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to insert
+ * @return On success returns LIST_OK
+ * @return Returns LIST_INSERT_OUT_OF_BOUNDS if trying to insert
  * in invalid position in list
- * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element);
 
@@ -198,9 +198,9 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
  * @param element A pointer to the memory that holds the element
  * to be inserted
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
- * @return Otherwise returns LIST_RC_FAIL
+ * @return On success returns LIST_OK
+ * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
+ * @return Otherwise returns LIST_FAIL
  */
 ListResultCode listPushFront(List *list, void *element);
 
@@ -214,9 +214,9 @@ ListResultCode listPushFront(List *list, void *element);
  * @param element A pointer to the memory that holds the element
  * to be inserted
  * 
- * @return On success returns LIST_RC_OK
- * @return Returns LIST_RC_OUT_OF_MEMORY if failed to allocate memory for new node
- * @return Otherwise returns LIST_RC_FAIL
+ * @return On success returns LIST_OK
+ * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
+ * @return Otherwise returns LIST_FAIL
  */
 ListResultCode listPushBack(List *list, void *element);
 
@@ -233,9 +233,9 @@ ListResultCode listPushBack(List *list, void *element);
  * @param iterator An iterator pointing to the position of
  * the list where to remove an element
  * 
- * @return On success returns LIST_RC_OK
- * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return On success returns LIST_OK
+ * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listRemove(List *list, ListIterator *iterator);
 
@@ -252,11 +252,11 @@ ListResultCode listRemove(List *list, ListIterator *iterator);
  * @param position The position in the list from which the element
  * must be removed
  * 
- * @return On success returns LIST_RC_OK
- * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
- * @return Returns LIST_RC_INSERT_OUT_OF_BOUNDS if trying to remove
+ * @return On success returns LIST_OK
+ * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_INSERT_OUT_OF_BOUNDS if trying to remove
  * from an invalid position in list
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listRemoveFromIndex(List *list, unsigned long position);
 
@@ -266,9 +266,9 @@ ListResultCode listRemoveFromIndex(List *list, unsigned long position);
  * @param list The address of the list from which the element
  * must be removed
  * 
- * @return On success returns LIST_RC_OK
- * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return On success returns LIST_OK
+ * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listPopFront(List *list);
 
@@ -278,9 +278,9 @@ ListResultCode listPopFront(List *list);
  * @param list The address of the list from which the element
  * must be removed
  * 
- * @return On success returns LIST_RC_OK
- * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
- * @return Returns LIST_RC_FAIL if failed for generic reasons
+ * @return On success returns LIST_OK
+ * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_FAIL if failed for generic reasons
  */
 ListResultCode listPopBack(List *list);
 
@@ -290,9 +290,9 @@ ListResultCode listPopBack(List *list);
  * @param list The address of the list from which all elements
  * must be removed
  * 
- * @return On success returns LIST_RC_OK
- * @return LIST_RC_REMOVE_ALREADY_EMPTY if list is empty
- * @return Returns LIST_RC_FAIL if unable to remove all elements
+ * @return On success returns LIST_OK
+ * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
+ * @return Returns LIST_FAIL if unable to remove all elements
  */
 ListResultCode listRemoveAll(List *list);
 
