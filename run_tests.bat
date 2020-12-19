@@ -25,8 +25,8 @@ set PATH=%PATH%;%TOOLCHAIN_PATH%
 
 REM Build artifacts paths
 set TEST_INCLUDE_PATHS=-Imunit -Itests -Isrc\include -I%LIBSDL_PATH%\include\SDL2
-set TEST_LIBS_PATHS=-L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib
-set TEST_NEEDED_LIBS=-lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
+set TEST_LIBS_PATHS=-L%LIBSDL_PATH%\lib
+set TEST_NEEDED_LIBS=-lmingw32 -lSDL2main -lSDL2
 
 REM Setting up default build configurations
 set TEST_COMPILATION_PARAMS=-Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17
