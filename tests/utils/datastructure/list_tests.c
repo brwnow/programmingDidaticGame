@@ -135,11 +135,6 @@ MUNIT_DECLARE_SETUP_FUNC(listRemoveAllElements);
 MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveAllElements);
 MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements);
 
-// MIX INSERT-REMOVE
-
-// Inserting and removing randomly large amount of elements
-MUNIT_DECLARE_TEST_FUNC(listInsertAndRemoveLargeAmount);
-
 // SEARCHING
 
 // DESTROYING
@@ -397,17 +392,6 @@ static MunitTest listTests[] = {
         MUNIT_TEST_FUNC_NAME(listRemoveAllElements),
         MUNIT_SETUP_FUNC_NAME(listRemoveAllElements),
         MUNIT_TEARDOWN_FUNC_NAME(listRemoveAllElements),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-
-// MIX INSERT-REMOVE
-
-    {
-        "/listInsertRemove-largeAmount",
-        MUNIT_TEST_FUNC_NAME(listInsertAndRemoveLargeAmount),
-        NULL,
-        NULL,
         MUNIT_TEST_OPTION_NONE,
         NULL
     },
@@ -1232,12 +1216,6 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
     return MUNIT_OK;
-}
-
-// MIX INSERT-REMOVE
-
-MUNIT_DECLARE_TEST_FUNC(listInsertAndRemoveLargeAmount) {
-    return MUNIT_FAIL;
 }
 
 // SEARCHING
