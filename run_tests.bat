@@ -61,12 +61,10 @@ echo ----------------------------------------
 REM Tests compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\munit.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\main.o
-%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\core\video\window_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\window_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_tests.o
 
 set BUILD_OBJECTS_NEEDED_BY_TEST=   build\tests\%BUILD_MODE%\main.o^
                                     build\tests\%BUILD_MODE%\munit.o^
-                                    build\tests\%BUILD_MODE%\window_tests.o^
                                     build\tests\%BUILD_MODE%\list_tests.o^
                                     build\%BUILD_MODE%\list.o^
                                     build\%BUILD_MODE%\log.o
