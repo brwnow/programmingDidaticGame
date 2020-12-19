@@ -22,6 +22,19 @@ private Node* createNode(void *data, Node *previous, Node *next) {
     return newNode;
 }
 
+// Destroy a given node properly
+private void destroyNode(Node *node) {
+    if(node == NULL)
+        return;
+
+    // Remember that once a node holds a reference for the data
+    // the ownership of the date is tranferred to the Node
+    if(node->data != NULL)
+        free(node->data);
+
+    free(node);
+}
+
 // Create an iterator and return NULL if failed allocation memory for the iterator
 private ListIterator* createIterator(void *data, Node *currentNode) {
     ListIterator *iterator = (ListIterator*)malloc(sizeof(ListIterator));
@@ -99,8 +112,7 @@ private ListResultCode removeNode(List *list, Node *positionNode) {
             positionNode->prev->next = positionNode->next;
             positionNode->next->prev = positionNode->prev;
 
-            free(positionNode->data);
-            free(positionNode);
+            destroyNode(positionNode);
 
             --(list->elementsCount);
         }
@@ -381,8 +393,7 @@ ListResultCode listPopFront(List *list) {
         list->firstNode->prev = NULL;
     }
 
-    free(nodeToPop->data);
-    free(nodeToPop);
+    destroyNode(nodeToPop);
     --(list->elementsCount);
 
     return LIST_OK;
@@ -404,8 +415,7 @@ ListResultCode listPopBack(List *list) {
         list->lastNode->next = NULL;
     }
 
-    free(nodeToPop->data);
-    free(nodeToPop);
+    destroyNode(nodeToPop);
     --(list->elementsCount);
 
     return LIST_OK;
@@ -422,8 +432,7 @@ ListResultCode listRemoveAll(List *list) {
     while(currentNode != NULL) {
         Node *nextNode = currentNode->next;
 
-        free(currentNode->data);
-        free(currentNode);
+        destroyNode(currentNode);
 
         currentNode = nextNode;
     }
