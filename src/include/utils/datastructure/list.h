@@ -26,6 +26,7 @@ typedef enum _ListResultCode {
 
     // Generic error code
     LIST_OUT_OF_BOUNDS = -999, /**< List operation range out of bounds */
+    LIST_NODE_OWNERSHIP_ERROR, /**< List operation given node doesn't belong to given list */
     LIST_FAIL = -1, /**< List operation failed */
 
 /* *** SUCCESS CODE *** */
@@ -168,7 +169,7 @@ ListResultCode listMoveBack(ListIterator *iterator);
  * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Returns LIST_FAIL if failed for generic reasons
  */
-ListResultCode listInsert(List *list, ListIterator *iterator, ListRelativePosition relativePos, void *element);
+ListResultCode listInsert(ListIterator *iterator, ListRelativePosition relativePos, void *element);
 
 /**
  * @brief Insert an element in the list at a given position
@@ -243,7 +244,7 @@ ListResultCode listPushBack(List *list, void *element);
  * @return LIST_REMOVE_ALREADY_EMPTY if list is empty
  * @return Returns LIST_FAIL if failed for generic reasons
  */
-ListResultCode listRemove(List *list, ListIterator *iterator);
+ListResultCode listRemove(ListIterator *iterator);
 
 /**
  * @brief Remove an element from the list

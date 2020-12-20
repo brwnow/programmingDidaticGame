@@ -10,13 +10,17 @@
 #include "utils/datastructure/list_private.h"
 
 // Create a node and return NULL if it failed to allocate memory for the new node
-private Node* createNode(void *data, Node *previous, Node *next) {
+private Node* createNode(void *data, Node *previous, Node *next, List *parent) {
+    if(parent == NULL)
+        return NULL;
+
     Node *newNode = (Node*)malloc(sizeof(Node));
 
     if(newNode != NULL) {
         newNode->data = data;
         newNode->prev = previous;
         newNode->next = next;
+        newNode->parent = parent;
     }
 
     return newNode;
@@ -60,9 +64,13 @@ private ListResultCode listInsertEx(List *list, Node *positionNode, ListRelative
     if(positionNode == NULL && list->elementsCount > 0)
         return LIST_FAIL;
 
+    // Given node doesn't belong to given list
+    if(positionNode != NULL && positionNode->parent != list)
+        return LIST_NODE_OWNERSHIP_ERROR;
+
     if(positionNode == NULL) {
         // Inserting the first node of the list
-        list->firstNode = list->lastNode = createNode(element, NULL, NULL);
+        list->firstNode = list->lastNode = createNode(element, NULL, NULL, list);
 
         if(list->firstNode == NULL) // If failed to allocate memory for the new node
             return LIST_OUT_OF_MEMORY;
@@ -75,7 +83,7 @@ private ListResultCode listInsertEx(List *list, Node *positionNode, ListRelative
 
         positionNode->data = element;
     } else if(relativePos == LIST_BEFORE) {
-        Node *newNode = createNode(element, positionNode->prev, positionNode);
+        Node *newNode = createNode(element, positionNode->prev, positionNode, list);
 
         if(newNode == NULL)
             return LIST_OUT_OF_MEMORY;
@@ -90,7 +98,7 @@ private ListResultCode listInsertEx(List *list, Node *positionNode, ListRelative
 
         ++(list->elementsCount);
     } else if(relativePos == LIST_AFTER) {
-        Node *newNode = createNode(element, positionNode, positionNode->next);
+        Node *newNode = createNode(element, positionNode, positionNode->next, list);
 
         if(newNode == NULL)
             return LIST_OUT_OF_MEMORY;
@@ -130,6 +138,10 @@ private ListResultCode listRemoveEx(List *list, Node *positionNode) {
      * positionNode receiving NULL (ex.: listPopFront and listPopBack) */
     if(positionNode == NULL)
         return LIST_FAIL;
+
+    // Given node doesn't belong to given list
+    if(positionNode->parent != list)
+        return LIST_NODE_OWNERSHIP_ERROR;
 
     if(positionNode->prev != NULL) {
         positionNode->prev->next = positionNode->next;
@@ -248,17 +260,14 @@ ListResultCode listMoveNext(ListIterator *iterator) {
     if(iterator == NULL)
         return LIST_FAIL;
 
-    Node *currentNode = iterator->currentNode;
-
-    if(currentNode == NULL)
+    if(iterator->currentNode == NULL)
         return LIST_FAIL;
 
-    if(currentNode->next == NULL)
+    if(iterator->currentNode->next == NULL)
         return LIST_ITERATOR_END_REACHED;
 
-    currentNode = currentNode->next;
-    iterator->data = currentNode->data;
-    iterator->currentNode = currentNode;
+    iterator->currentNode = iterator->currentNode->next;
+    iterator->data = iterator->currentNode->data;
 
     return LIST_OK;
 }
@@ -267,26 +276,23 @@ ListResultCode listMoveBack(ListIterator *iterator) {
     if(iterator == NULL)
         return LIST_FAIL;
 
-    Node *currentNode = iterator->currentNode;
-
-    if(currentNode == NULL)
+    if(iterator->currentNode == NULL)
         return LIST_FAIL;
 
-    if(currentNode->prev == NULL)
+    if(iterator->currentNode->prev == NULL)
         return LIST_ITERATOR_BEGIN_REACHED;
 
-    currentNode = currentNode->prev;
-    iterator->data = currentNode->data;
-    iterator->currentNode = currentNode;
+    iterator->currentNode = iterator->currentNode->prev;
+    iterator->data = iterator->currentNode->data;
 
     return LIST_OK;
 }
 
-ListResultCode listInsert(List *list, ListIterator *iterator, ListRelativePosition relativePos, void *element) {
-    if(iterator == NULL)
+ListResultCode listInsert(ListIterator *iterator, ListRelativePosition relativePos, void *element) {
+    if(iterator == NULL || iterator->currentNode == NULL)
         return LIST_FAIL;
 
-    return listInsertEx(list, iterator->currentNode, relativePos, element);
+    return listInsertEx(iterator->currentNode->parent, iterator->currentNode, relativePos, element);
 }
 
 ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element) {
@@ -329,11 +335,11 @@ ListResultCode listPushBack(List *list, void *element) {
     return listInsertEx(list, list->lastNode, LIST_AFTER, element);
 }
 
-ListResultCode listRemove(List *list, ListIterator *iterator) {
-    if(iterator == NULL)
+ListResultCode listRemove(ListIterator *iterator) {
+    if(iterator == NULL || iterator->currentNode == NULL)
         return LIST_FAIL;
 
-    return listRemoveEx(list, iterator->currentNode);
+    return listRemoveEx(iterator->currentNode->parent, iterator->currentNode);
 }
 
 ListResultCode listRemoveFromIndex(List *list, unsigned long position) {

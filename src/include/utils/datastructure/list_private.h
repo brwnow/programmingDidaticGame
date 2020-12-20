@@ -5,6 +5,9 @@ struct _Node {
     void *data;
     struct _Node *prev;
     struct _Node *next;
+
+    // The list that owns this node
+    struct _List *parent;
 };
 
 struct _List {
