@@ -111,29 +111,42 @@ private ListResultCode listInsertEx(List *list, Node *positionNode, ListRelative
     return LIST_OK;
 }
 
-// Removes a given node from the list
-private ListResultCode removeNode(List *list, Node *positionNode) {
-    ListResultCode ret = LIST_OK;
+// Extended remove.
+// Removes the given node from the list
+private ListResultCode listRemoveEx(List *list, Node *positionNode) {
+    if(list == NULL)
+        return LIST_FAIL;
 
-    if(list == NULL || positionNode == NULL)
-        ret = LIST_FAIL;
+    // Its quite important that this check comes earlier than check for
+    // positionNode being not null pointer
+    if(list->elementsCount == 0UL)
+        return LIST_REMOVE_ALREADY_EMPTY;
 
-    if(ret == LIST_OK) {
-        if(positionNode->prev == NULL) { // If removing from first position
-            ret = listPopFront(list);
-        } else if(positionNode->next == NULL) { // If removing from last position
-            ret = listPopBack(list);
-        } else {
-            positionNode->prev->next = positionNode->next;
-            positionNode->next->prev = positionNode->prev;
+    /* This guard must come after the guard that checks the amount of elements
+     * in the list. If it comes before, it will not be possible to retrn
+     * LIST_REMOVE_ALREADY_EMPTY for the cases a NULL node was passed to
+     * positionNode parameter. Some functions that calls listRemoveEx needs
+     * the behavior of failing by LIST_REMOVE_ALREADY_EMPTY even for 
+     * positionNode receiving NULL (ex.: listPopFront and listPopBack) */
+    if(positionNode == NULL)
+        return LIST_FAIL;
 
-            destroyNode(positionNode);
-
-            --(list->elementsCount);
-        }
+    if(positionNode->prev != NULL) {
+        positionNode->prev->next = positionNode->next;
+    } else {
+        list->firstNode = positionNode->next;
     }
 
-    return ret;
+    if(positionNode->next != NULL) {
+        positionNode->next->prev = positionNode->prev;
+    } else {
+        list->lastNode = positionNode->prev;
+    }
+
+    destroyNode(positionNode);
+    --(list->elementsCount);
+
+    return LIST_OK;
 }
 
 // ==============
@@ -317,22 +330,10 @@ ListResultCode listPushBack(List *list, void *element) {
 }
 
 ListResultCode listRemove(List *list, ListIterator *iterator) {
-    if(iterator == NULL || iterator->currentNode == NULL)
+    if(iterator == NULL)
         return LIST_FAIL;
 
-    Node *currentNode = iterator->currentNode;
-    Node *nextNode = currentNode->next;
-    ListResultCode ret = removeNode(list, currentNode);
-
-    // On success, sets the iterator to the next node
-    if(ret == LIST_OK) {
-        iterator->currentNode = nextNode;
-
-        if(nextNode != NULL)
-            iterator->data = nextNode->data;
-    }
-
-    return ret;
+    return listRemoveEx(list, iterator->currentNode);
 }
 
 ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
@@ -342,72 +343,34 @@ ListResultCode listRemoveFromIndex(List *list, unsigned long position) {
     if(list->elementsCount == 0UL)
         return LIST_REMOVE_ALREADY_EMPTY;
 
-    if(position >= list->elementsCount)
-        return LIST_OUT_OF_BOUNDS;
+    ListIterator *iterator;
+    ListResultCode ret = LIST_FAIL;
 
-    if(position == 0UL) { // Popping the element from front
-        return listPopFront(list);
-    } else if(position == list->elementsCount - 1) { // Popping the element from back
-        return listPopBack(list);
-    } else { // Defult insertion case
-        ListIterator *iterator;
-        ListResultCode ret = LIST_FAIL;
+    ret = listFindElement(list, position, &iterator);
+    if(ret == LIST_OK)
+        ret = listRemoveEx(list, iterator->currentNode);
 
-        ret = listFindElement(list, position, &iterator);
-        if(ret == LIST_OK)
-            ret = listRemove(list, iterator);
+    if(iterator != NULL)
+        free(iterator);
 
-        if(iterator != NULL)
-            free(iterator);
-
-        return ret;
-    }
+    return ret;
 }
 
 ListResultCode listPopFront(List *list) {
     if(list == NULL)
         return LIST_FAIL;
 
-    if(list->elementsCount == 0UL)
-        return LIST_REMOVE_ALREADY_EMPTY;
-
-    Node *nodeToPop = list->firstNode;
-
-    if(list->elementsCount == 1UL) { // Last node being removed
-        list->firstNode = list->lastNode = NULL;
-    } else {
-        list->firstNode = list->firstNode->next;
-        list->firstNode->prev = NULL;
-    }
-
-    destroyNode(nodeToPop);
-    --(list->elementsCount);
-
-    return LIST_OK;
+    return listRemoveEx(list, list->firstNode);
 }
 
 ListResultCode listPopBack(List *list) {
     if(list == NULL)
         return LIST_FAIL;
 
-    if(list->elementsCount == 0UL)
-        return LIST_REMOVE_ALREADY_EMPTY;
-
-    Node *nodeToPop = list->lastNode;
-
-    if(list->elementsCount == 1UL) { // Last node being removed
-        list->firstNode = list->lastNode = NULL;
-    } else {
-        list->lastNode = list->lastNode->prev;
-        list->lastNode->next = NULL;
-    }
-
-    destroyNode(nodeToPop);
-    --(list->elementsCount);
-
-    return LIST_OK;
+    return listRemoveEx(list, list->lastNode);
 }
 
+// For performance reasons this function doesn't use listRemoveEx
 ListResultCode listRemoveAll(List *list) {
     if(list == NULL)
         return LIST_FAIL;
