@@ -24,7 +24,7 @@ REM Setting up PATH to avoid missing .dll while running gcc.exe
 set PATH=%PATH%;%TOOLCHAIN_PATH%
 
 REM Build artifacts paths
-set TEST_INCLUDE_PATHS=-Imunit -Itests -Isrc\include -I%LIBSDL_PATH%\include\SDL2
+set TEST_INCLUDE_PATHS=-Imunit -Itests -Isrc\include -Itests\include -I%LIBSDL_PATH%\include\SDL2
 set TEST_LIBS_PATHS=-L%LIBSDL_PATH%\lib
 set TEST_NEEDED_LIBS=-lmingw32 -lSDL2main -lSDL2
 
@@ -62,10 +62,20 @@ REM Tests compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\munit.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\main.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_create_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_create_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_destroy_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_destroy_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_getter_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_getter_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_insert_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_insert_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_remove_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_remove_tests.o
 
 set BUILD_OBJECTS_NEEDED_BY_TEST=   build\tests\%BUILD_MODE%\main.o^
                                     build\tests\%BUILD_MODE%\munit.o^
                                     build\tests\%BUILD_MODE%\list_tests.o^
+                                    build\tests\%BUILD_MODE%\list_create_tests.o^
+                                    build\tests\%BUILD_MODE%\list_destroy_tests.o^
+                                    build\tests\%BUILD_MODE%\list_getter_tests.o^
+                                    build\tests\%BUILD_MODE%\list_insert_tests.o^
+                                    build\tests\%BUILD_MODE%\list_remove_tests.o^
                                     build\%BUILD_MODE%\list.o^
                                     build\%BUILD_MODE%\log.o
 
