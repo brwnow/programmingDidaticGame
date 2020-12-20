@@ -795,7 +795,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexLargeAmount) {
             break;
         }
 
-        munit_assert_ulong(ret, ==, LIST_OK);
+        munit_assert_long(ret, ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, amountToBeInserted + 1);
@@ -825,7 +825,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexInInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listInsertAtIndex(list, 5UL, NULL), ==, LIST_OUT_OF_BOUNDS);
+    munit_assert_long(listInsertAtIndex(list, 5UL, NULL), ==, LIST_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;
@@ -879,7 +879,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopFront) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listPopFront(list), ==, LIST_REMOVE_ALREADY_EMPTY);
+    munit_assert_long(listPopFront(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -900,7 +900,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopBack) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
+    munit_assert_long(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -921,7 +921,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemove) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
+    munit_assert_long(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -942,7 +942,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemoveAllElements) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_ulong(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
+    munit_assert_long(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -1152,7 +1152,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
             break;
         }
 
-        munit_assert_ulong(ret, ==, LIST_OK);
+        munit_assert_long(ret, ==, LIST_OK);
     }
 
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
@@ -1183,7 +1183,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
-    munit_assert_ulong(listRemoveFromIndex(list, 4UL), ==, LIST_OUT_OF_BOUNDS);
+    munit_assert_long(listRemoveFromIndex(list, 4UL), ==, LIST_OUT_OF_BOUNDS);
     munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
 
     return MUNIT_OK;
@@ -1212,7 +1212,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 75000UL);
 
-    munit_assert_ulong(listRemoveAll(list), ==, LIST_OK);
+    munit_assert_long(listRemoveAll(list), ==, LIST_OK);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
     return MUNIT_OK;
