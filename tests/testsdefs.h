@@ -1,6 +1,8 @@
 #ifndef _DIDATIC_GAME_TESTS_DEFS_H
 #define _DIDATIC_GAME_TESTS_DEFS_H
 
+#include <munit.h>
+
 // Macros that gives the complete name for several kind of test functions
 // this allows to work with a symbolic function name what keep it easier
 // also make it possible to automate some declarations
@@ -20,12 +22,14 @@
     MUNIT_TEST_OPTION_NONE, \
     NULL }
 
+#define RETURN_EXISTING_SETUP_FUNC(funcName) return GET_SETUP_FUNC_NAME(funcName)(params, user_data)
+
 // Macros for declaring some kinds of test functions
 // setup - prepare the test data structures
 // teardown - clean up what setup allocated
 #define DECLARE_SETUP_FUNC(funcName) void* GET_SETUP_FUNC_NAME(funcName)( \
                                                             const MunitParameter params[] MUNIT_UNUSED, \
-                                                            void* user_data MUNIT_UNUSED )
+                                                            void* user_data MUNIT_UNUSED)
 #define DECLARE_TEARDOWN_FUNC(funcName) void GET_TEARDOWN_FUNC_NAME(funcName)(void* fixture)
 
 // these following macos declare the test function itsel and pointers to itsel and its setup and teardown

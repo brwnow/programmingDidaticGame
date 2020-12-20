@@ -1,8 +1,8 @@
-#include <munit.h>
 #include <testsdefs.h>
 
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_tests.h"
+#include "utils/datastructure/test_list_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listDestroyNullPtr) {
     munit_assert_long(listDestroy(NULL), ==, LIST_FAIL);
@@ -10,17 +10,7 @@ DEFINE_STANDALONE_TEST_FUNC(listDestroyNullPtr) {
     return MUNIT_OK;
 }
 
-// ============
-
-DECLARE_SETUP_FUNC(listDestroyEmpty) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listDestroyEmpty) {
-    UNUSED(fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listDestroyEmpty) {
+DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listEmptyStubTd) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -35,18 +25,7 @@ DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listDestroyEmpty) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listDestroyNotEmpty) {
-    List *list = listCreate();
-    listPushBack(list, malloc(1));
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listDestroyNotEmpty) {
-    UNUSED(fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listDestroyNotEmpty, listDestroyNotEmpty) {
+DEFINE_FULL_TEST_FUNC(listDestroySingleElement, listSingleElementStubTd) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -66,7 +45,7 @@ DEFINE_FULL_TEST_FUNC(listDestroyNotEmpty, listDestroyNotEmpty) {
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-nullPtr", listDestroyNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroyEmptyList", listDestroyEmpty),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroyNotEmptyList", listDestroyNotEmpty),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroySingleElement", listDestroySingleElement),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }

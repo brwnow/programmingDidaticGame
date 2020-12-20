@@ -61,6 +61,7 @@ echo ----------------------------------------
 REM Tests compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c munit\munit.c %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\munit.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\main.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\main.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\test_list_setups.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\test_list_setups.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_create_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_create_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_destroy_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_destroy_tests.o
@@ -70,6 +71,7 @@ REM Tests compilation
 
 set BUILD_OBJECTS_NEEDED_BY_TEST=   build\tests\%BUILD_MODE%\main.o^
                                     build\tests\%BUILD_MODE%\munit.o^
+                                    build\tests\%BUILD_MODE%\test_list_setups.o^
                                     build\tests\%BUILD_MODE%\list_tests.o^
                                     build\tests\%BUILD_MODE%\list_create_tests.o^
                                     build\tests\%BUILD_MODE%\list_destroy_tests.o^

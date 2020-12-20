@@ -1,8 +1,8 @@
-#include <munit.h>
 #include <testsdefs.h>
 
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_tests.h"
+#include "utils/datastructure/test_list_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listGetElementsCountNullPtr) {
     munit_assert_ulong(listGetElementsCount(NULL), ==, 0UL);
@@ -10,17 +10,7 @@ DEFINE_STANDALONE_TEST_FUNC(listGetElementsCountNullPtr) {
     return MUNIT_OK;
 }
 
-// ============
-
-DECLARE_SETUP_FUNC(listGetElementsCountEmpty) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listGetElementsCountEmpty) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listGetElementsCountEmpty, listGetElementsCountEmpty) {
+DEFINE_FULL_TEST_FUNC(listGetElementsCountEmpty, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -29,27 +19,11 @@ DEFINE_FULL_TEST_FUNC(listGetElementsCountEmpty, listGetElementsCountEmpty) {
     return MUNIT_OK;
 }
 
-// ============
-
-DECLARE_SETUP_FUNC(listGetElementsCount) {
-    List *list = listCreate();
-
-    listPushBack(list, malloc(sizeof(float)));
-    listPushBack(list, malloc(sizeof(float)));
-    listPushBack(list, malloc(sizeof(float)));
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listGetElementsCount) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listGetElementsCount, listGetElementsCount) {
+DEFINE_FULL_TEST_FUNC(listGetElementsCountSingleElement, listSingleElement) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(listGetElementsCount(list), ==, 1UL);
 
     return MUNIT_OK;
 }
@@ -61,7 +35,7 @@ DEFINE_FULL_TEST_FUNC(listGetElementsCount, listGetElementsCount) {
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-nullPtr", listGetElementsCountNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-emptyList", listGetElementsCountEmpty),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-populatedList", listGetElementsCount),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-singleElement", listGetElementsCountSingleElement),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
