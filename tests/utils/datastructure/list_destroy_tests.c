@@ -4,7 +4,7 @@
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_tests.h"
 
-MUNIT_DECLARE_TEST_FUNC(listDestroyNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listDestroyNullPtr) {
     munit_assert_long(listDestroy(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -12,18 +12,19 @@ MUNIT_DECLARE_TEST_FUNC(listDestroyNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listDestroyNotEmpty) {
-    List *list = listCreate();
-    listPushBack(list, malloc(1));
-
-    return list;
+DECLARE_SETUP_FUNC(listDestroyEmpty) {
+    return listCreate();
 }
 
-MUNIT_DECLARE_TEST_FUNC(listDestroyNotEmpty) {
+DECLARE_TEARDOWN_FUNC(listDestroyEmpty) {
+    UNUSED(fixture);
+}
+
+DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listDestroyEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), !=, 0UL);
+    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
     ListResultCode ret = listDestroy(list);
 
@@ -34,15 +35,22 @@ MUNIT_DECLARE_TEST_FUNC(listDestroyNotEmpty) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listDestroyEmpty) {
-    return listCreate();
+DECLARE_SETUP_FUNC(listDestroyNotEmpty) {
+    List *list = listCreate();
+    listPushBack(list, malloc(1));
+
+    return list;
 }
 
-MUNIT_DECLARE_TEST_FUNC(listDestroyEmpty) {
+DECLARE_TEARDOWN_FUNC(listDestroyNotEmpty) {
+    UNUSED(fixture);
+}
+
+DEFINE_FULL_TEST_FUNC(listDestroyNotEmpty, listDestroyNotEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(listGetElementsCount(list), !=, 0UL);
 
     ListResultCode ret = listDestroy(list);
 
@@ -56,30 +64,9 @@ MUNIT_DECLARE_TEST_FUNC(listDestroyEmpty) {
 // =================
 
 static MunitTest listTests[] = {
-    {
-        "/listDestroy-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listDestroyNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listDestroy-destroyNotEmptyList",
-        MUNIT_TEST_FUNC_NAME(listDestroyNotEmpty),
-        MUNIT_SETUP_FUNC_NAME(listDestroyNotEmpty),
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listDestroy-destroyEmptyList",
-        MUNIT_TEST_FUNC_NAME(listDestroyEmpty),
-        MUNIT_SETUP_FUNC_NAME(listDestroyEmpty),
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-nullPtr", listDestroyNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroyEmptyList", listDestroyEmpty),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroyNotEmptyList", listDestroyNotEmpty),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }

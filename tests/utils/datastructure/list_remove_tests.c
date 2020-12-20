@@ -4,7 +4,7 @@
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_tests.h"
 
-MUNIT_DECLARE_TEST_FUNC(listPopFrontNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listPopFrontNullPtr) {
     munit_assert_long(listPopFront(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -12,7 +12,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopFrontNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listPopBackNullPtr) {
     munit_assert_long(listPopBack(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -20,7 +20,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopBackNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listRemoveNullPtr) {
     munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -28,7 +28,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listRemoveAllNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listRemoveAllNullPtr) {
     munit_assert_long(listRemoveAll(NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -36,15 +36,15 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyPopFront) {
+DECLARE_SETUP_FUNC(listEmptyPopFront) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPopFront) {
+DECLARE_TEARDOWN_FUNC(listEmptyPopFront) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyPopFront) {
+DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmptyPopFront) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -57,15 +57,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopFront) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyPopBack) {
+DECLARE_SETUP_FUNC(listEmptyPopBack) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPopBack) {
+DECLARE_TEARDOWN_FUNC(listEmptyPopBack) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyPopBack) {
+DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmptyPopBack) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -78,15 +78,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPopBack) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyRemove) {
+DECLARE_SETUP_FUNC(listEmptyRemove) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyRemove) {
+DECLARE_TEARDOWN_FUNC(listEmptyRemove) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyRemove) {
+DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmptyRemove) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -99,15 +99,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemove) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyRemoveAllElements) {
+DECLARE_SETUP_FUNC(listEmptyRemoveAllElements) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyRemoveAllElements) {
+DECLARE_TEARDOWN_FUNC(listEmptyRemoveAllElements) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyRemoveAllElements) {
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmptyRemoveAllElements) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -120,7 +120,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyRemoveAllElements) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listPopFront) {
+DECLARE_SETUP_FUNC(listPopFront) {
     List *list = listCreate();
     int elems[] = {20, 35, 59, -85, 1, 289, 999999};
 
@@ -133,11 +133,11 @@ MUNIT_DECLARE_SETUP_FUNC(listPopFront) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listPopFront) {
+DECLARE_TEARDOWN_FUNC(listPopFront) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listPopFront) {
+DEFINE_FULL_TEST_FUNC(listPopFront, listPopFront) {
     List *list = (List*)user_data_or_fixture;
     int remainingElems[] = {-85, 1, 289, 999999};
     const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
@@ -173,7 +173,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopFront) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listPopBack) {
+DECLARE_SETUP_FUNC(listPopBack) {
     List *list = listCreate();
     int elems[] = {20, 35, 59, -85, 1, 289, 999999};
 
@@ -186,11 +186,11 @@ MUNIT_DECLARE_SETUP_FUNC(listPopBack) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listPopBack) {
+DECLARE_TEARDOWN_FUNC(listPopBack) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listPopBack) {
+DEFINE_FULL_TEST_FUNC(listPopBack, listPopBack) {
     List *list = (List*)user_data_or_fixture;
     int remainingElems[] = {20, 35, 59, -85};
     const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
@@ -226,7 +226,7 @@ MUNIT_DECLARE_TEST_FUNC(listPopBack) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listRemove) {
+DECLARE_SETUP_FUNC(listRemove) {
     List *list = listCreate();
     int elems[] = {20, 35, 59, -85, 1, 289, 999999, -456888, 0, 2, 4, 6, 8, 7, 3, 5};
 
@@ -239,11 +239,11 @@ MUNIT_DECLARE_SETUP_FUNC(listRemove) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listRemove) {
+DECLARE_TEARDOWN_FUNC(listRemove) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listRemove) {
+DEFINE_FULL_TEST_FUNC(listRemove, listRemove) {
     List *list = (List*)user_data_or_fixture;
     int remainingElems[] = {35, -85, 289, -456888, 2, 4, 6, 8, 3};
     const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
@@ -280,7 +280,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemove) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listRemoveRandom) {
+DECLARE_SETUP_FUNC(listRemoveRandom) {
     List *list = listCreate();
     const size_t listElemsCount = 25000;
 
@@ -291,11 +291,11 @@ MUNIT_DECLARE_SETUP_FUNC(listRemoveRandom) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveRandom) {
+DECLARE_TEARDOWN_FUNC(listRemoveRandom) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
+DEFINE_FULL_TEST_FUNC(listRemoveRandom, listRemoveRandom) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -333,7 +333,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveRandom) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listRemoveInvalidPosition) {
+DECLARE_SETUP_FUNC(listRemoveInvalidPosition) {
     List *list = listCreate();
     const size_t listElemsCount = 3;
 
@@ -344,11 +344,11 @@ MUNIT_DECLARE_SETUP_FUNC(listRemoveInvalidPosition) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition) {
+DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
+DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listRemoveInvalidPosition) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -362,7 +362,7 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveInvalidPosition) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listRemoveAllElements) {
+DECLARE_SETUP_FUNC(listRemoveAllElements) {
     List *list = listCreate();
     const size_t listElemsCount = 75000;
 
@@ -373,11 +373,11 @@ MUNIT_DECLARE_SETUP_FUNC(listRemoveAllElements) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listRemoveAllElements) {
+DECLARE_TEARDOWN_FUNC(listRemoveAllElements) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
+DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listRemoveAllElements) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -394,118 +394,20 @@ MUNIT_DECLARE_TEST_FUNC(listRemoveAllElements) {
 // =================
 
 static MunitTest listTests[] = {
-    {
-        "/listPopFront-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listPopFrontNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPopBack-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listPopBackNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemove-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listRemoveNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemoveAll-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listRemoveAllNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPopFront-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyPopFront),
-        MUNIT_SETUP_FUNC_NAME(listEmptyPopFront),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyPopFront),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPopBack-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyPopBack),
-        MUNIT_SETUP_FUNC_NAME(listEmptyPopBack),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyPopBack),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemove-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyRemove),
-        MUNIT_SETUP_FUNC_NAME(listEmptyRemove),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyRemove),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemoveAll-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyRemoveAllElements),
-        MUNIT_SETUP_FUNC_NAME(listEmptyRemoveAllElements),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyRemoveAllElements),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPopFront-notEmptyList",
-        MUNIT_TEST_FUNC_NAME(listPopFront),
-        MUNIT_SETUP_FUNC_NAME(listPopFront),
-        MUNIT_TEARDOWN_FUNC_NAME(listPopFront),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPopBack-notEmptyList",
-        MUNIT_TEST_FUNC_NAME(listPopBack),
-        MUNIT_SETUP_FUNC_NAME(listPopBack),
-        MUNIT_TEARDOWN_FUNC_NAME(listPopBack),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemove-notEmptyList",
-        MUNIT_TEST_FUNC_NAME(listRemove),
-        MUNIT_SETUP_FUNC_NAME(listRemove),
-        MUNIT_TEARDOWN_FUNC_NAME(listRemove),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemove-random",
-        MUNIT_TEST_FUNC_NAME(listRemoveRandom),
-        MUNIT_SETUP_FUNC_NAME(listRemoveRandom),
-        MUNIT_TEARDOWN_FUNC_NAME(listRemoveRandom),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemove-invalidPosition",
-        MUNIT_TEST_FUNC_NAME(listRemoveInvalidPosition),
-        MUNIT_SETUP_FUNC_NAME(listRemoveInvalidPosition),
-        MUNIT_TEARDOWN_FUNC_NAME(listRemoveInvalidPosition),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listRemoveAll-notEmptyList",
-        MUNIT_TEST_FUNC_NAME(listRemoveAllElements),
-        MUNIT_SETUP_FUNC_NAME(listRemoveAllElements),
-        MUNIT_TEARDOWN_FUNC_NAME(listRemoveAllElements),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-nullPtr", listPopFrontNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-nullPtr", listPopBackNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-nullPtr", listRemoveNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-nullPtr", listRemoveAllNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-emptyList", listEmptyPopFront),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-emptyList", listEmptyPopBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-emptyList", listEmptyRemove),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-emptyList", listEmptyRemoveAllElements),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-notEmptyList", listPopFront),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-notEmptyList", listPopBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-notEmptyList", listRemove),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-random", listRemoveRandom),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-invalidPosition", listRemoveInvalidPosition),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-notEmptyList", listRemoveAllElements),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }

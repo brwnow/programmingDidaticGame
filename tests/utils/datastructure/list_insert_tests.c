@@ -4,7 +4,7 @@
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_tests.h"
 
-MUNIT_DECLARE_TEST_FUNC(listPushFrontNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listPushFrontNullPtr) {
     munit_assert_long(listPushFront(NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -12,7 +12,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushFrontNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listPushBackNullPtr) {
     munit_assert_long(listPushBack(NULL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -20,7 +20,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listInsertNullPtr) {
     munit_assert_long(listInsert(NULL, LIST_BEFORE, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -28,7 +28,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_TEST_FUNC(listInsertIndexNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listInsertIndexNullPtr) {
     munit_assert_long(listInsertAtIndex(NULL, 0UL, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -36,15 +36,15 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexNullPtr) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyPushFront) {
+DECLARE_SETUP_FUNC(listEmptyPushFront) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPushFront) {
+DECLARE_TEARDOWN_FUNC(listEmptyPushFront) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyPushFront) {
+DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmptyPushFront) {
     List *list = (List*)user_data_or_fixture;
     int elems[] = {9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
     size_t elemsCount = sizeof(elems) / sizeof(int);
@@ -80,15 +80,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushFront) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyPushBack) {
+DECLARE_SETUP_FUNC(listEmptyPushBack) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyPushBack) {
+DECLARE_TEARDOWN_FUNC(listEmptyPushBack) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyPushBack) {
+DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmptyPushBack) {
     List *list = (List*)user_data_or_fixture;
     int elems[] = {-856, 41, 0, 23, 158, -89356, 54685, 321, 444, -4585, 84, -2};
     size_t elemsCount = sizeof(elems) / sizeof(int);
@@ -124,15 +124,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyPushBack) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyInsert) {
+DECLARE_SETUP_FUNC(listEmptyInsert) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyInsert) {
+DECLARE_TEARDOWN_FUNC(listEmptyInsert) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
+DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmptyInsert) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -145,15 +145,15 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listEmptyInsertIndex) {
+DECLARE_SETUP_FUNC(listEmptyInsertIndex) {
     return listCreate();
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listEmptyInsertIndex) {
+DECLARE_TEARDOWN_FUNC(listEmptyInsertIndex) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listEmptyInsertIndex) {
+DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmptyInsertIndex) {
     List *list = (List*)user_data_or_fixture;
     int elems[] = {0, 50, 2, 999, 73};
     size_t elemsCount = sizeof(elems) / sizeof(int);
@@ -189,7 +189,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsertIndex) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listNotEmptyInsertIndexVariablePositions) {
+DECLARE_SETUP_FUNC(listNotEmptyInsertIndexVariablePositions) {
     List *list = listCreate();
     char *pos1 = (char*)malloc(sizeof(char));
     char *pos2 = (char*)malloc(sizeof(char));
@@ -206,11 +206,11 @@ MUNIT_DECLARE_SETUP_FUNC(listNotEmptyInsertIndexVariablePositions) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listNotEmptyInsertIndexVariablePositions) {
+DECLARE_TEARDOWN_FUNC(listNotEmptyInsertIndexVariablePositions) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertIndexVariablePositions) {
+DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listNotEmptyInsertIndexVariablePositions) {
     List *list = (List*)user_data_or_fixture;
     char elems[] = {'a', 'b', 'c', 'z', 'i', 'p', 'k'};
     size_t elemsCount = sizeof(elems) / sizeof(char);
@@ -254,7 +254,7 @@ MUNIT_DECLARE_TEST_FUNC(listNotEmptyInsertIndexVariablePositions) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listInsertIndexLargeAmount) {
+DECLARE_SETUP_FUNC(listInsertIndexLargeAmount) {
     List *list = listCreate();
 
     listPushBack(list, malloc(sizeof(int)));
@@ -262,11 +262,11 @@ MUNIT_DECLARE_SETUP_FUNC(listInsertIndexLargeAmount) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listInsertIndexLargeAmount) {
+DECLARE_TEARDOWN_FUNC(listInsertIndexLargeAmount) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listInsertIndexLargeAmount) {
+DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listInsertIndexLargeAmount) {
     List *list = (List*)user_data_or_fixture;
     const size_t amountToBeInserted = 50000;
 
@@ -303,7 +303,7 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexLargeAmount) {
 
 // ============
 
-MUNIT_DECLARE_SETUP_FUNC(listInsertIndexInInvalidPosition) {
+DECLARE_SETUP_FUNC(listInsertIndexInInvalidPosition) {
     List *list = listCreate();
 
     listPushBack(list, malloc(sizeof(double)));
@@ -313,11 +313,11 @@ MUNIT_DECLARE_SETUP_FUNC(listInsertIndexInInvalidPosition) {
     return list;
 }
 
-MUNIT_DECLARE_TEARDOWN_FUNC(listInsertIndexInInvalidPosition) {
+DECLARE_TEARDOWN_FUNC(listInsertIndexInInvalidPosition) {
     listDestroy((List*)fixture);
 }
 
-MUNIT_DECLARE_TEST_FUNC(listInsertIndexInInvalidPosition) {
+DEFINE_FULL_TEST_FUNC(listInsertIndexInInvalidPosition, listInsertIndexInInvalidPosition) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -334,94 +334,17 @@ MUNIT_DECLARE_TEST_FUNC(listInsertIndexInInvalidPosition) {
 // =================
 
 static MunitTest listTests[] = {
-    {
-        "/listPushFront-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listPushFrontNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPushBack-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listPushBackNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsert-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listInsertNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsertAtIndex-nullPtr",
-        MUNIT_TEST_FUNC_NAME(listInsertIndexNullPtr),
-        NULL,
-        NULL,
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPushFront-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyPushFront),
-        MUNIT_SETUP_FUNC_NAME(listEmptyPushFront),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyPushFront),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listPushBack-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyPushBack),
-        MUNIT_SETUP_FUNC_NAME(listEmptyPushBack),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyPushBack),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsert-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyInsert),
-        MUNIT_SETUP_FUNC_NAME(listEmptyInsert),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyInsert),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsertAtIndex-emptyList",
-        MUNIT_TEST_FUNC_NAME(listEmptyInsertIndex),
-        MUNIT_SETUP_FUNC_NAME(listEmptyInsertIndex),
-        MUNIT_TEARDOWN_FUNC_NAME(listEmptyInsertIndex),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsertAtIndex-notEmptyList",
-        MUNIT_TEST_FUNC_NAME(listNotEmptyInsertIndexVariablePositions),
-        MUNIT_SETUP_FUNC_NAME(listNotEmptyInsertIndexVariablePositions),
-        MUNIT_TEARDOWN_FUNC_NAME(listNotEmptyInsertIndexVariablePositions),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsertAtIndex-largeAmount",
-        MUNIT_TEST_FUNC_NAME(listInsertIndexLargeAmount),
-        MUNIT_SETUP_FUNC_NAME(listInsertIndexLargeAmount),
-        MUNIT_TEARDOWN_FUNC_NAME(listInsertIndexLargeAmount),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
-    {
-        "/listInsertAtIndex-invalidPosition",
-        MUNIT_TEST_FUNC_NAME(listInsertIndexInInvalidPosition),
-        MUNIT_SETUP_FUNC_NAME(listInsertIndexInInvalidPosition),
-        MUNIT_TEARDOWN_FUNC_NAME(listInsertIndexInInvalidPosition),
-        MUNIT_TEST_OPTION_NONE,
-        NULL
-    },
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushFront-nullPtr", listPushFrontNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushBack-nullPtr", listPushBackNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-nullPtr", listInsertNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-nullPtr", listInsertIndexNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushFront-emptyList", listEmptyPushFront),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushBack-emptyList", listEmptyPushBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-emptyList", listEmptyInsert),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-emptyList", listEmptyInsertIndex),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-notEmptyList", listNotEmptyInsertIndexVariablePositions),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-largeAmount", listInsertIndexLargeAmount),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-invalidPosition", listInsertIndexInInvalidPosition),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
