@@ -523,7 +523,7 @@ MUNIT_DECLARE_TEST_FUNC(listPushBackNullPtr) {
 // ============
 
 MUNIT_DECLARE_TEST_FUNC(listInsertNullPtr) {
-    munit_assert_long(listInsert(NULL, NULL, NULL), ==, LIST_FAIL);
+    munit_assert_long(listInsert(NULL, NULL, LIST_BEFORE, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -640,7 +640,7 @@ MUNIT_DECLARE_TEST_FUNC(listEmptyInsert) {
     munit_assert_not_null(list);
     munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
 
-    munit_assert_long(listInsert(list, NULL, NULL), ==, LIST_FAIL);
+    munit_assert_long(listInsert(list, NULL, LIST_BEFORE, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }

@@ -45,6 +45,12 @@ typedef enum _ListResultCode {
 
 } ListResultCode;
 
+typedef enum _ListRelativePosition {
+    LIST_BEFORE, /**< Insert before current node */
+    LIST_AFTER, /**< Insert after current node */
+    LIST_REPLACE /**< Replace current node data */
+} ListRelativePosition;
+
 /**
  * @brief Create an empty list and return its memory address
  * 
@@ -162,7 +168,7 @@ ListResultCode listMoveBack(ListIterator *iterator);
  * @return Returns LIST_OUT_OF_MEMORY if failed to allocate memory for new node
  * @return Returns LIST_FAIL if failed for generic reasons
  */
-ListResultCode listInsert(List *list, ListIterator *iterator, void *element);
+ListResultCode listInsert(List *list, ListIterator *iterator, ListRelativePosition relativePos, void *element);
 
 /**
  * @brief Insert an element in the list at a given position

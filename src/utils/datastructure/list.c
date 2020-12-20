@@ -47,53 +47,68 @@ private ListIterator* createIterator(void *data, Node *currentNode) {
     return iterator;
 }
 
-// This function insert the first node ever of the list (it's not pushfront)
-private ListResultCode insertFirstNode(List *list, void *element) {
+// Extended insert.
+// Insert an element in position relative to a given node
+// May insert before or after positionNode
+// If positionNode is NULL and list is empty, it's the case of inserting the first node
+private ListResultCode listInsertEx(List *list, Node *positionNode, ListRelativePosition relativePos, void *element) {
     if(list == NULL)
         return LIST_FAIL;
 
-    if(list->elementsCount > 0UL)
-        return LIST_FAIL; // List not empty. First node was already inserted
+    // positionNode may be NULL if list is empty
+    // otherwise its an error
+    if(positionNode == NULL && list->elementsCount > 0)
+        return LIST_FAIL;
 
-    Node *firstNode = createNode(element, NULL, NULL);
+    if(positionNode == NULL) {
+        // Inserting the first node of the list
+        list->firstNode = list->lastNode = createNode(element, NULL, NULL);
 
-    if(firstNode == NULL)
-        return LIST_OUT_OF_MEMORY; // Failed to allocated memory for the first node
+        if(list->firstNode == NULL) // If failed to allocate memory for the new node
+            return LIST_OUT_OF_MEMORY;
 
-    list->firstNode = list->lastNode = firstNode;
-    list->elementsCount = 1UL;
+        ++(list->elementsCount);
+    } else if(relativePos == LIST_REPLACE) {
+        // Replacing current node data
+        if(positionNode->data != NULL)
+            free(positionNode->data);
 
-    return LIST_OK;
-}
+        positionNode->data = element;
+    } else if(relativePos == LIST_BEFORE) {
+        Node *newNode = createNode(element, positionNode->prev, positionNode);
 
-// Insert a node in place of a given positionNode.
-private ListResultCode insertAtNode(List *list, Node *positionNode, void *element) {
-    ListResultCode ret = LIST_OK;
+        if(newNode == NULL)
+            return LIST_OUT_OF_MEMORY;
 
-    if(list == NULL || positionNode == NULL)
-        ret = LIST_FAIL;
-
-    if(ret == LIST_OK) {
-        if(positionNode->prev == NULL) { // If inserting in first position of the list
-            ret = listPushFront(list, element);
+        if(positionNode->prev != NULL) {
+            positionNode->prev->next = newNode;
         } else {
-            Node *newNode = createNode(element, NULL, NULL);
-            if(newNode == NULL)
-                ret = LIST_OUT_OF_MEMORY;
-
-            if(ret == LIST_OK) {
-                // Attaching new node to the d-linked list
-                newNode->prev = positionNode->prev;
-                newNode->next = positionNode;
-                positionNode->prev->next = newNode;
-                positionNode->prev = newNode;
-
-                ++(list->elementsCount);
-            }
+            list->firstNode = newNode;
         }
+
+        positionNode->prev = newNode;
+
+        ++(list->elementsCount);
+    } else if(relativePos == LIST_AFTER) {
+        Node *newNode = createNode(element, positionNode, positionNode->next);
+
+        if(newNode == NULL)
+            return LIST_OUT_OF_MEMORY;
+
+        if(positionNode->next != NULL) {
+            positionNode->next->prev = newNode;
+        } else {
+            list->lastNode = newNode;
+        }
+
+        positionNode->next = newNode;
+
+        ++(list->elementsCount);
+    } else {
+        return LIST_FAIL;
     }
 
-    return ret;
+    return LIST_OK;
 }
 
 // Removes a given node from the list
@@ -254,11 +269,11 @@ ListResultCode listMoveBack(ListIterator *iterator) {
     return LIST_OK;
 }
 
-ListResultCode listInsert(List *list, ListIterator *iterator, void *element) {
+ListResultCode listInsert(List *list, ListIterator *iterator, ListRelativePosition relativePos, void *element) {
     if(iterator == NULL)
         return LIST_FAIL;
 
-    return insertAtNode(list, iterator->currentNode, element);
+    return listInsertEx(list, iterator->currentNode, relativePos, element);
 }
 
 ListResultCode listInsertAtIndex(List *list, unsigned long position, void *element) {
@@ -268,19 +283,17 @@ ListResultCode listInsertAtIndex(List *list, unsigned long position, void *eleme
     if(position > list->elementsCount)
         return LIST_OUT_OF_BOUNDS;
 
-    if(list->elementsCount == 0UL) { // List is empty, inserting first element
-        return insertFirstNode(list, element);
-    } else if(position == 0UL) { // Pushing the element in front
-        return listPushFront(list, element);
-    } else if(position == list->elementsCount) { // Pushing the element in back
-        return listPushBack(list, element);
-    } else { // Defult insertion case
+    if(position == 0UL && list->elementsCount == 0UL) { // Empty list case
+        return listInsertEx(list, NULL, LIST_BEFORE, element);
+    } else if(position == list->elementsCount) { // Push back case
+        return listInsertEx(list, list->lastNode, LIST_AFTER, element);
+    } else { // Default case
         ListIterator *iterator;
         ListResultCode ret = LIST_FAIL;
 
         ret = listFindElement(list, position, &iterator);
         if(ret == LIST_OK)
-            ret = listInsert(list, iterator, element);
+            ret = listInsertEx(list, iterator->currentNode, LIST_BEFORE, element);
 
         if(iterator != NULL)
             free(iterator);
@@ -293,40 +306,14 @@ ListResultCode listPushFront(List *list, void *element) {
     if(list == NULL)
         return LIST_FAIL;
 
-    if(list->elementsCount == 0UL) {
-        return insertFirstNode(list, element);
-    } else {
-        Node *newNode = createNode(element, NULL, list->firstNode);
-
-        if(newNode == NULL)
-            return LIST_FAIL;
-
-        list->firstNode->prev = newNode;
-        list->firstNode = newNode;
-        ++(list->elementsCount);
-
-        return LIST_OK;
-    }
+    return listInsertEx(list, list->firstNode, LIST_BEFORE, element);
 }
 
 ListResultCode listPushBack(List *list, void *element) {
     if(list == NULL)
         return LIST_FAIL;
 
-    if(list->elementsCount == 0UL) {
-        return insertFirstNode(list, element);
-    } else {
-        Node *newNode = createNode(element, list->lastNode, NULL);
-
-        if(newNode == NULL)
-            return LIST_FAIL;
-
-        list->lastNode->next = newNode;
-        list->lastNode = newNode;
-        ++(list->elementsCount);
-
-        return LIST_OK;
-    }
+    return listInsertEx(list, list->lastNode, LIST_AFTER, element);
 }
 
 ListResultCode listRemove(List *list, ListIterator *iterator) {
