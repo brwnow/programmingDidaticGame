@@ -1,5 +1,3 @@
-#include <munit.h>
-
 #include "utils/log/log.h"
 #include "utils/datastructure/list_tests.h"
 

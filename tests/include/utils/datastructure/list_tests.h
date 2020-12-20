@@ -1,6 +1,8 @@
 #ifndef _DIDATIC_GAME_LIST_TESTS_H_
 #define _DIDATIC_GAME_LIST_TESTS_H_
 
+#include <munit.h>
+
 // Controls the amount of subsuites for list tests
 #define LIST_SUBSUITES_NUMBER 5
 
