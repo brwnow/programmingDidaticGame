@@ -8,20 +8,13 @@
 // =======================
 // Empty list
 DECLARE_SETUP_FUNC(listEmpty) {
-    List *list = malloc(sizeof(List));
-
-    list->elementsCount = 0;
-    list->firstNode = list->lastNode = NULL;
-
-    return list;
+    return listCreate();
 }
 
 DECLARE_TEARDOWN_FUNC(listEmpty) {
     listDestroy(fixture);
 }
 
-// =======================
-// Empty list with stub teardown
 DECLARE_SETUP_FUNC(listEmptyStubTd) {
     RETURN_EXISTING_SETUP_FUNC(listEmpty);
 }
@@ -33,33 +26,128 @@ DECLARE_TEARDOWN_FUNC(listEmptyStubTd) {
 // =======================
 // Single element list
 DECLARE_SETUP_FUNC(listSingleElement) {
-    List *list = malloc(sizeof(List));
-    Node *singleNode = malloc(sizeof(Node));
+    const int value = 5;
+
+    List *list = listCreate();
+    int *setupValue = malloc(sizeof(int));
+
+    *setupValue = value;
+
+    FIXTURE_CREATE(fixture, 2);
+    FIXTURE_INDEX(fixture, 0) = list;
+    FIXTURE_INDEX(fixture, 1) = setupValue;
+
     int *singleElement = malloc(sizeof(int));
+    *singleElement = value;
 
-    *singleElement = 5;
+    listPushBack(list, singleElement);
 
-    singleNode->data = singleElement;
-    singleNode->next = NULL;
-    singleNode->prev = NULL;
-    singleNode->parent = list;
-
-    list->elementsCount = 1UL;
-    list->firstNode = list->lastNode = singleNode;
-
-    return list;
+    FIXTURE_RETURN(fixture);
 }
 
 DECLARE_TEARDOWN_FUNC(listSingleElement) {
-    listDestroy(fixture);
+    listDestroy(FIXTURE_INDEX(fixture, 0));
+    free(FIXTURE_INDEX(fixture, 1));
+
+    free(fixture);
 }
 
-// =======================
-// Single element list with stub teardown (nothing is really cleaned up)
 DECLARE_SETUP_FUNC(listSingleElementStubTd) {
     RETURN_EXISTING_SETUP_FUNC(listSingleElement);
 }
 
 DECLARE_TEARDOWN_FUNC(listSingleElementStubTd) {
-    (void)fixture;
+    free(FIXTURE_INDEX(fixture, 1));
+
+    free(fixture);
+}
+
+// =======================
+// Few elements list
+DECLARE_SETUP_FUNC(listFewElements) {
+    const int values[] = {0, 10, 3, 99, -250000, 999999, -7, 888, 50, 42};
+
+    List *list = listCreate();
+    int *setupArray = malloc(sizeof(values));
+    size_t *setupArraySize = malloc(sizeof(size_t));
+
+    memcpy(setupArray, values, sizeof(values));
+    *setupArraySize = sizeof(values) / sizeof(int);
+
+    FIXTURE_CREATE(fixture, 3);
+    FIXTURE_INDEX(fixture, 0) = list;
+    FIXTURE_INDEX(fixture, 1) = setupArray;
+    FIXTURE_INDEX(fixture, 2) = setupArraySize;
+
+    for(size_t i = 0; i < *setupArraySize; ++i) {
+        int *element = malloc(sizeof(int));
+        *element = values[i];
+        listPushBack(list, element);
+    }
+
+    FIXTURE_RETURN(fixture);
+}
+
+DECLARE_TEARDOWN_FUNC(listFewElements) {
+    listDestroy(FIXTURE_INDEX(fixture, 0));
+    free(FIXTURE_INDEX(fixture, 1));
+    free(FIXTURE_INDEX(fixture, 2));
+
+    free(fixture);
+}
+
+DECLARE_SETUP_FUNC(listFewElementsStubTd) {
+    RETURN_EXISTING_SETUP_FUNC(listFewElements);
+}
+
+DECLARE_TEARDOWN_FUNC(listFewElementsStubTd) {
+    free(FIXTURE_INDEX(fixture, 1));
+    free(FIXTURE_INDEX(fixture, 2));
+
+    free(fixture);
+}
+
+// =======================
+// Large amount of elements lsit
+DECLARE_SETUP_FUNC(listLargeAmountElementsRandomValue) {
+    const size_t arraySize = 10000;
+
+    List *list = listCreate();
+    int *setupArray = malloc(sizeof(int) * arraySize);
+    size_t *setupArraySize = malloc(sizeof(size_t));
+
+    *setupArraySize = arraySize;
+
+    FIXTURE_CREATE(fixture, 3);
+    FIXTURE_INDEX(fixture, 0) = list;
+    FIXTURE_INDEX(fixture, 1) = setupArray;
+    FIXTURE_INDEX(fixture, 2) = setupArraySize;
+
+    for(size_t i = 0; i < arraySize; ++i) {
+        int *element = malloc(sizeof(int));
+        setupArray[i] = munit_rand_int_range(-999999, 999999);
+        *element = setupArray[i];
+        listPushBack(list, element);
+    }
+
+    FIXTURE_RETURN(fixture);
+}
+
+DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValue) {
+    listDestroy(FIXTURE_INDEX(fixture, 0));
+    free(FIXTURE_INDEX(fixture, 1));
+    free(FIXTURE_INDEX(fixture, 2));
+
+    free(fixture);
+}
+
+DECLARE_SETUP_FUNC(listLargeAmountElementsRandomValueStubTd) {
+    RETURN_EXISTING_SETUP_FUNC(listLargeAmountElementsRandomValue);
+}
+
+DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValueStubTd) {
+    free(FIXTURE_INDEX(fixture, 1));
+    free(FIXTURE_INDEX(fixture, 2));
+
+    free(fixture);
 }
