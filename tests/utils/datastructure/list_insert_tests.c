@@ -1,7 +1,9 @@
 #include <testsdefs.h>
 
 #include "utils/datastructure/list.h"
+#include "utils/datastructure/list_private.h"
 #include "utils/datastructure/list_tests.h"
+#include "utils/datastructure/test_list_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listPushFrontNullPtr) {
     munit_assert_long(listPushFront(NULL, NULL), ==, LIST_FAIL);
