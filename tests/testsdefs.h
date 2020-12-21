@@ -58,4 +58,9 @@
     DECLARE_TEST_FUNC_TEARDOWN_PTR(funcName) = GET_TEARDOWN_FUNC_NAME(setupTeardownPairName); \
     DECLARE_TEST_FUNC(funcName)
 
+// Macros to facilitate working with fixture array
+#define FIXTURE_CREATE(fixture, size) void *fixture = malloc(sizeof(void*) * size)
+#define FIXTURE_INDEX(fixture, index) (((void**)fixture)[index])
+#define FIXTURE_RETURN(fixture) return fixture
+
 #endif // _DIDATIC_GAME_TESTS_DEFS_H
