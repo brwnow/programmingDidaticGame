@@ -1,13 +1,17 @@
 #include <testsdefs.h>
 
 #include "utils/datastructure/list.h"
+#include "utils/datastructure/list_private.h"
 #include "utils/datastructure/list_tests.h"
+#include "utils/datastructure/test_list_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listCreate) {
     List *list = listCreate();
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+    munit_assert_null(list->firstNode);
+    munit_assert_null(list->lastNode);
 
     listDestroy(list);
 
