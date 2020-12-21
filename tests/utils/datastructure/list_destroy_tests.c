@@ -1,6 +1,7 @@
 #include <testsdefs.h>
 
 #include "utils/datastructure/list.h"
+#include "utils/datastructure/list_private.h"
 #include "utils/datastructure/list_tests.h"
 #include "utils/datastructure/test_list_setups.h"
 
@@ -11,10 +12,10 @@ DEFINE_STANDALONE_TEST_FUNC(listDestroyNullPtr) {
 }
 
 DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listEmptyStubTd) {
-    List *list = (List*)user_data_or_fixture;
+    List *list = user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     ListResultCode ret = listDestroy(list);
 
@@ -23,13 +24,38 @@ DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listEmptyStubTd) {
     return MUNIT_OK;
 }
 
-// ============
-
 DEFINE_FULL_TEST_FUNC(listDestroySingleElement, listSingleElementStubTd) {
-    List *list = (List*)user_data_or_fixture;
+    List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), !=, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 1UL);
+
+    ListResultCode ret = listDestroy(list);
+
+    munit_assert_long(ret, ==, LIST_OK);
+
+    return MUNIT_OK;
+}
+
+DEFINE_FULL_TEST_FUNC(listDestroyFewElements, listFewElementsStubTd) {
+    List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, >, 1UL);
+
+    ListResultCode ret = listDestroy(list);
+
+    munit_assert_long(ret, ==, LIST_OK);
+
+    return MUNIT_OK;
+}
+
+DEFINE_FULL_TEST_FUNC(listDestroyLargeAmountRandom, listLargeAmountElementsRandomValueStubTd) {
+    List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t numberOfElements = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, numberOfElements);
 
     ListResultCode ret = listDestroy(list);
 
@@ -44,8 +70,10 @@ DEFINE_FULL_TEST_FUNC(listDestroySingleElement, listSingleElementStubTd) {
 
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-nullPtr", listDestroyNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroyEmptyList", listDestroyEmpty),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-destroySingleElement", listDestroySingleElement),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-emptyList", listDestroyEmpty),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-singleElement", listDestroySingleElement),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-fewElements", listDestroyFewElements),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listDestroy-largeAmountRandom", listDestroyLargeAmountRandom),
 
     // Ending of tests array
     { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
