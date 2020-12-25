@@ -49,7 +49,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmptyPopFront) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listPopFront(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
@@ -70,7 +70,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmptyPopBack) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
@@ -91,7 +91,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmptyRemove) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
 
@@ -112,7 +112,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmptyRemoveAllElements) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
@@ -145,29 +145,25 @@ DEFINE_FULL_TEST_FUNC(listPopFront, listPopFront) {
     const size_t numberOfRemoves = 3;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
+    munit_assert_ulong(list->elementsCount, ==, 7UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listPopFront(list), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
-    munit_assert_not_null(it);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it->data);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        munit_assert_not_null(current->data);
+        int val = *((int*)(current->data));
 
         munit_assert_int(val, ==, remainingElems[i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current ->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -198,29 +194,25 @@ DEFINE_FULL_TEST_FUNC(listPopBack, listPopBack) {
     const size_t numberOfRemoves = 3;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 7UL);
+    munit_assert_ulong(list->elementsCount, ==, 7UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listPopBack(list), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
-    munit_assert_not_null(it);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it->data);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        munit_assert_not_null(current->data);
+        int val = *((int*)(current->data));
 
         munit_assert_int(val, ==, remainingElems[i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current ->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -252,29 +244,25 @@ DEFINE_FULL_TEST_FUNC(listRemove, listRemove) {
     const size_t numberOfRemoves = sizeof(indexesToRemove) / sizeof(size_t);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 16UL);
+    munit_assert_ulong(list->elementsCount, ==, 16UL);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listRemoveFromIndex(list, indexesToRemove[i]), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
-    munit_assert_not_null(it);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it->data);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        munit_assert_not_null(current->data);
+        int val = *((int*)(current->data));
 
         munit_assert_int(val, ==, remainingElems[i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current ->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -300,11 +288,11 @@ DEFINE_FULL_TEST_FUNC(listRemoveRandom, listRemoveRandom) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 25000UL);
+    munit_assert_ulong(list->elementsCount, ==, 25000UL);
 
     for(size_t i = 0; i < 25000; ++i) {
         int removeMethod = munit_rand_int_range(0, 4);
-        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list) - 1);
+        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)(list->elementsCount) - 1);
         ListResultCode ret = LIST_FAIL;
 
         switch (removeMethod)
@@ -327,7 +315,7 @@ DEFINE_FULL_TEST_FUNC(listRemoveRandom, listRemoveRandom) {
         munit_assert_long(ret, ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     return MUNIT_OK;
 }
@@ -353,10 +341,10 @@ DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listRemoveInvalidPosition) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, 3UL);
 
     munit_assert_long(listRemoveFromIndex(list, 4UL), ==, LIST_OUT_OF_BOUNDS);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, 3UL);
 
     return MUNIT_OK;
 }
@@ -382,10 +370,10 @@ DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listRemoveAllElements) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 75000UL);
+    munit_assert_ulong(list->elementsCount, ==, 75000UL);
 
     munit_assert_long(listRemoveAll(list), ==, LIST_OK);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     return MUNIT_OK;
 }
