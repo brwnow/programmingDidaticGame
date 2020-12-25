@@ -51,7 +51,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmptyPushFront) {
     size_t elemsCount = sizeof(elems) / sizeof(int);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
@@ -59,22 +59,18 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmptyPushFront) {
         munit_assert_long(listPushFront(list, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
+    Node *current = list->firstNode;
 
     for(int i = elemsCount - 1; i >= 0; --i) {
-        munit_assert_not_null(it);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        int val = *((int*)current->data);
 
         munit_assert_int(val, ==, elems[(size_t)i]);
 
-        if(i > 0)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -95,7 +91,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmptyPushBack) {
     size_t elemsCount = sizeof(elems) / sizeof(int);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
@@ -103,22 +99,18 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmptyPushBack) {
         munit_assert_long(listPushBack(list, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; --i) {
-        munit_assert_not_null(it);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        int val = *((int*)current->data);
 
         munit_assert_int(val, ==, elems[(size_t)i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -137,7 +129,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmptyInsert) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listInsert(NULL, LIST_BEFORE, NULL), ==, LIST_FAIL);
 
@@ -160,7 +152,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmptyInsertIndex) {
     size_t elemsCount = sizeof(elems) / sizeof(int);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 0UL);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     for(size_t i = 0; i < elemsCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
@@ -168,22 +160,18 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmptyInsertIndex) {
         munit_assert_long(listInsertAtIndex(list, i, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
+    munit_assert_ulong(list->elementsCount, ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it);
-        int val = *((int*)it->data);
+        munit_assert_not_null(current);
+        int val = *((int*)current->data);
 
         munit_assert_int(val, ==, elems[i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -217,7 +205,7 @@ DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listNotEmptyInse
     size_t elemsCount = sizeof(elems) / sizeof(char);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, 3UL);
 
     char *elem = (char*)malloc(sizeof(char));
     *elem = elems[1];
@@ -234,21 +222,17 @@ DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listNotEmptyInse
 
     munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
 
-    ListIterator *it;
-    munit_assert_long(listGetBegin(list, &it), ==, LIST_OK);
-    munit_assert_not_null(it);
+    Node *current = list->firstNode;
 
     for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(it->data);
-        char val = *((char*)it->data);
+        munit_assert_not_null(current);
+        munit_assert_not_null(current->data);
+        char val = *((char*)current->data);
 
         munit_assert_int(val, ==, elems[i]);
 
-        if(i < elemsCount - 1)
-            munit_assert_long(listMoveNext(it), ==, LIST_OK);
+        current = current->next;
     }
-
-    free(it);
 
     return MUNIT_OK;
 }
@@ -272,11 +256,11 @@ DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listInsertIndexLargeAmount) {
     const size_t amountToBeInserted = 50000;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 1UL);
+    munit_assert_ulong(list->elementsCount, ==, 1UL);
 
     for(size_t i = 0; i < amountToBeInserted; ++i) {
         int insertMethod = munit_rand_int_range(0, 2);
-        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)listGetElementsCount(list));
+        unsigned long position = (unsigned long)munit_rand_int_range(0, (int)(list->elementsCount));
         ListResultCode ret = LIST_FAIL;
 
         switch (insertMethod)
@@ -297,7 +281,7 @@ DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listInsertIndexLargeAmount) {
         munit_assert_long(ret, ==, LIST_OK);
     }
 
-    munit_assert_ulong(listGetElementsCount(list), ==, amountToBeInserted + 1);
+    munit_assert_ulong(list->elementsCount, ==, amountToBeInserted + 1);
 
     return MUNIT_OK;
 }
@@ -322,10 +306,10 @@ DEFINE_FULL_TEST_FUNC(listInsertIndexInInvalidPosition, listInsertIndexInInvalid
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, 3UL);
 
     munit_assert_long(listInsertAtIndex(list, 5UL, NULL), ==, LIST_OUT_OF_BOUNDS);
-    munit_assert_ulong(listGetElementsCount(list), ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, 3UL);
 
     return MUNIT_OK;
 }
