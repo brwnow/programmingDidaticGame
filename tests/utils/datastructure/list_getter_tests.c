@@ -60,8 +60,7 @@ static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-fewElements", listGetElementsCountFewElements),
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetElementsCount-largeAmountRandom", listGetElementsCountLargeAmountRandom),
 
-    // Ending of tests array
-    { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
+    TEST_FUNC_ARRAY_END
 };
 
 static MunitSuite listTestsSuite = {

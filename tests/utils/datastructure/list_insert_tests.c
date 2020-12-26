@@ -308,8 +308,7 @@ static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-largeAmount", listInsertIndexLargeAmount),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-invalidPosition", listInsertIndexInInvalidPosition),
 
-    // Ending of tests array
-    { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
+    TEST_FUNC_ARRAY_END
 };
 
 static MunitSuite listTestsSuite = {

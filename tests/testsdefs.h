@@ -22,6 +22,8 @@
     MUNIT_TEST_OPTION_NONE, \
     NULL }
 
+#define TEST_FUNC_ARRAY_END { NULL, NULL, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL }
+
 #define RETURN_EXISTING_SETUP_FUNC(funcName) return GET_SETUP_FUNC_NAME(funcName)(params, user_data)
 
 // Macros for declaring some kinds of test functions
