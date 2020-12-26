@@ -61,4 +61,18 @@ DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValue);
 DECLARE_SETUP_FUNC(listLargeAmountElementsRandomValueStubTd);
 DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValueStubTd);
 
+// =======================
+/* Node not owned by list
+ * List with a few nodes. Values -> 5, 8, 11
+ * Node not owned by the list. Data null, Parent invalid value != list reference
+ * 
+ * fixture format: array of void* with 4 positions
+ *      [0] -> pointer to list
+ *      [1] -> pointer to an array of int with the values in the description of this setup
+ *      [2] -> pointer to size_t with the number of elements in the array above
+ *      [3] -> pointer to a Node not owned by the list of this setup
+ */
+DECLARE_SETUP_FUNC(listFewElementsAndNodeNotOwnedByList);
+DECLARE_TEARDOWN_FUNC(listFewElementsAndNodeNotOwnedByList);
+
 #endif // _DIDATIC_GAME_TEST_LIST_SETUPS_H

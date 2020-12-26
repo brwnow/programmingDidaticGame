@@ -151,3 +151,40 @@ DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValueStubTd) {
 
     free(fixture);
 }
+
+// =======================
+// Node not owned by list
+DECLARE_SETUP_FUNC(listFewElementsAndNodeNotOwnedByList) {
+    const int values[] = {5, 8, 11};
+
+    List *list = listCreate();
+    int *setupArray = malloc(sizeof(values));
+    size_t *setupArraySize = malloc(sizeof(size_t));
+    Node *notOwnedByListNode = createNode(NULL, NULL, NULL, (List*)(-1L));
+
+    memcpy(setupArray, values, sizeof(values));
+    *setupArraySize = sizeof(values) / sizeof(int);
+
+    FIXTURE_CREATE(fixture, 4);
+    FIXTURE_INDEX(fixture, 0) = list;
+    FIXTURE_INDEX(fixture, 1) = setupArray;
+    FIXTURE_INDEX(fixture, 2) = setupArraySize;
+    FIXTURE_INDEX(fixture, 3) = notOwnedByListNode;
+
+    for(size_t i = 0; i < *setupArraySize; ++i) {
+        int *element = malloc(sizeof(int));
+        *element = values[i];
+        listPushBack(list, element);
+    }
+
+    FIXTURE_RETURN(fixture);
+}
+
+DECLARE_TEARDOWN_FUNC(listFewElementsAndNodeNotOwnedByList) {
+    listDestroy(FIXTURE_INDEX(fixture, 0));
+    free(FIXTURE_INDEX(fixture, 1));
+    free(FIXTURE_INDEX(fixture, 2));
+    destroyNode(FIXTURE_INDEX(fixture, 3));
+
+    free(fixture);
+}
