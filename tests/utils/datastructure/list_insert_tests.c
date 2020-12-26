@@ -139,21 +139,10 @@ DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listFewElements)
 
 // ============
 
-DECLARE_SETUP_FUNC(listInsertIndexLargeAmount) {
-    List *list = listCreate();
-
-    listPushBack(list, malloc(sizeof(int)));
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listInsertIndexLargeAmount) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listInsertIndexLargeAmount) {
-    List *list = (List*)user_data_or_fixture;
-    const size_t amountToBeInserted = 50000;
+DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listSingleElement) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t amountToBeInserted = 50000UL;
+    const size_t expectedSize = amountToBeInserted + 1UL;
 
     munit_assert_not_null(list);
     munit_assert_ulong(list->elementsCount, ==, 1UL);
@@ -181,37 +170,25 @@ DEFINE_FULL_TEST_FUNC(listInsertIndexLargeAmount, listInsertIndexLargeAmount) {
         munit_assert_long(ret, ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, amountToBeInserted + 1);
+    munit_assert_ulong(list->elementsCount, ==, expectedSize);
 
     return MUNIT_OK;
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listInsertIndexInInvalidPosition) {
-    List *list = listCreate();
-
-    listPushBack(list, malloc(sizeof(double)));
-    listPushBack(list, malloc(sizeof(double)));
-    listPushBack(list, malloc(sizeof(double)));
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listInsertIndexInInvalidPosition) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listInsertIndexInInvalidPosition, listInsertIndexInInvalidPosition) {
-    List *list = (List*)user_data_or_fixture;
+DEFINE_FULL_TEST_FUNC(listInsertIndexInInvalidPosition, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const int *expectedResult = (int*)FIXTURE_INDEX(user_data_or_fixture, 1);
+    const size_t expectedSize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, expectedSize);
 
-    munit_assert_long(listInsertAtIndex(list, 5UL, NULL), ==, LIST_OUT_OF_BOUNDS);
-    munit_assert_ulong(list->elementsCount, ==, 3UL);
+    munit_assert_long(listInsertAtIndex(list, expectedSize + 1UL, NULL), ==, LIST_OUT_OF_BOUNDS);
+    munit_assert_ulong(list->elementsCount, ==, expectedSize);
 
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedSize);
 }
 
 // =================
