@@ -29,7 +29,7 @@ set TEST_LIBS_PATHS=-L%LIBSDL_PATH%\lib
 set TEST_NEEDED_LIBS=-lmingw32 -lSDL2main -lSDL2
 
 REM Setting up default build configurations
-set TEST_COMPILATION_PARAMS=-Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17
+set TEST_COMPILATION_PARAMS=-Wall -Wextra -Werror -Wno-implicit-function-declaration -std=c17 -D_TESTS_ENABLED_
 set TEST_LINKING_FLAGS=-mconsole
 
 IF /I "%1" == "debug" (
@@ -70,8 +70,10 @@ REM Tests compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_insert_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_insert_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_remove_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_remove_tests.o
 
-set BUILD_OBJECTS_NEEDED_BY_TEST=   build\tests\%BUILD_MODE%\main.o^
+set BUILD_OBJECTS_NEEDED_BY_TEST=   build\%BUILD_MODE%\log.o^
                                     build\tests\%BUILD_MODE%\munit.o^
+                                    build\tests\%BUILD_MODE%\main.o^
+                                    build\%BUILD_MODE%\list.o^
                                     build\tests\%BUILD_MODE%\test_list_setups.o^
                                     build\tests\%BUILD_MODE%\list_test_utils.o^
                                     build\tests\%BUILD_MODE%\list_tests.o^
@@ -79,9 +81,7 @@ set BUILD_OBJECTS_NEEDED_BY_TEST=   build\tests\%BUILD_MODE%\main.o^
                                     build\tests\%BUILD_MODE%\list_destroy_tests.o^
                                     build\tests\%BUILD_MODE%\list_getter_tests.o^
                                     build\tests\%BUILD_MODE%\list_insert_tests.o^
-                                    build\tests\%BUILD_MODE%\list_remove_tests.o^
-                                    build\%BUILD_MODE%\list.o^
-                                    build\%BUILD_MODE%\log.o
+                                    build\tests\%BUILD_MODE%\list_remove_tests.o
 
 REM Tests linking
 %TOOLCHAIN_PATH%\%C_COMPILER%   %BUILD_OBJECTS_NEEDED_BY_TEST%^

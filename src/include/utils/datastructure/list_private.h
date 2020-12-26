@@ -16,4 +16,16 @@ struct _List {
     unsigned long elementsCount;
 };
 
+#ifdef _TESTS_ENABLED_
+
+    Node* createNode(void *data, Node *previous, Node *next, List *parent);
+    void destroyNode(Node *node);
+
+    ListIterator* createIterator(void *data, Node *currentNode);
+
+    ListResultCode listInsertEx(List *list, Node *positionNode, ListRelativePosition relativePos, void *element);
+    ListResultCode listRemoveEx(List *list, Node *positionNode);
+
+#endif // _TESTS_ENABLED_
+
 #endif // _DIDATIC_GAME_LIST_PRIV_H_
