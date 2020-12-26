@@ -4,6 +4,7 @@
 #include "utils/datastructure/list_private.h"
 #include "utils/datastructure/list_tests.h"
 #include "utils/datastructure/test_list_setups.h"
+#include "utils/datastructure/list_test_utils.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listPushFrontNullPtr) {
     munit_assert_long(listPushFront(NULL, NULL), ==, LIST_FAIL);
@@ -37,95 +38,50 @@ DEFINE_STANDALONE_TEST_FUNC(listInsertIndexNullPtr) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyPushFront) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyPushFront) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmptyPushFront) {
+DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmpty) {
     List *list = (List*)user_data_or_fixture;
-    int elems[] = {9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
-    size_t elemsCount = sizeof(elems) / sizeof(int);
+
+    const int expectedResult[] ={-4585, 0, 111, 54685, -89, 3, 27, 500, 4, 9};
+    const size_t expectedSize = sizeof(expectedResult) / sizeof(int);
+
+    const int valuesToInsert[] = {9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
 
     munit_assert_not_null(list);
     munit_assert_ulong(list->elementsCount, ==, 0UL);
 
-    for(size_t i = 0; i < elemsCount; ++i) {
+    for(size_t i = 0; i < valuesCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
-        *elem = elems[i];
+        *elem = valuesToInsert[i];
         munit_assert_long(listPushFront(list, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(int i = elemsCount - 1; i >= 0; --i) {
-        munit_assert_not_null(current);
-        int val = *((int*)current->data);
-
-        munit_assert_int(val, ==, elems[(size_t)i]);
-
-        current = current->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedSize);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyPushBack) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyPushBack) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmptyPushBack) {
+DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmpty) {
     List *list = (List*)user_data_or_fixture;
-    int elems[] = {-856, 41, 0, 23, 158, -89356, 54685, 321, 444, -4585, 84, -2};
-    size_t elemsCount = sizeof(elems) / sizeof(int);
+
+    const int valuesToInsert[] = {-856, 41, 0, 23, 158, -89356, 54685, 321, 444, -4585, 84, -2};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
 
     munit_assert_not_null(list);
     munit_assert_ulong(list->elementsCount, ==, 0UL);
 
-    for(size_t i = 0; i < elemsCount; ++i) {
+    for(size_t i = 0; i < valuesCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
-        *elem = elems[i];
+        *elem = valuesToInsert[i];
         munit_assert_long(listPushBack(list, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; --i) {
-        munit_assert_not_null(current);
-        int val = *((int*)current->data);
-
-        munit_assert_int(val, ==, elems[(size_t)i]);
-
-        current = current->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, valuesToInsert, valuesCount);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyInsert) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyInsert) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmptyInsert) {
+DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -138,103 +94,47 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmptyInsert) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyInsertIndex) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyInsertIndex) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmptyInsertIndex) {
+DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmpty) {
     List *list = (List*)user_data_or_fixture;
-    int elems[] = {0, 50, 2, 999, 73};
-    size_t elemsCount = sizeof(elems) / sizeof(int);
+
+    const int valuesToInsert[] = {0, 50, 2, 999, 73};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
 
     munit_assert_not_null(list);
     munit_assert_ulong(list->elementsCount, ==, 0UL);
 
-    for(size_t i = 0; i < elemsCount; ++i) {
+    for(size_t i = 0; i < valuesCount; ++i) {
         int *elem = (int*)malloc(sizeof(int));
-        *elem = elems[i];
+        *elem = valuesToInsert[i];
         munit_assert_long(listInsertAtIndex(list, i, elem), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(current);
-        int val = *((int*)current->data);
-
-        munit_assert_int(val, ==, elems[i]);
-
-        current = current->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, valuesToInsert, valuesCount);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listNotEmptyInsertIndexVariablePositions) {
-    List *list = listCreate();
-    char *pos1 = (char*)malloc(sizeof(char));
-    char *pos2 = (char*)malloc(sizeof(char));
-    char *pos3 = (char*)malloc(sizeof(char));
+DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialListSize = *((size_t*)FIXTURE_INDEX(user_data_or_fixture, 2));
 
-    *pos1 = 'a';
-    *pos2 = 'z';
-    *pos3 = 'k';
+    const int expectedResult[] = {40, 0, 2, -7, 10, 3, 99, -250000, -89555, 999999, -7, 888, 50, 99, 42, 65000};
+    const size_t expectedSize = sizeof(expectedResult) / sizeof(int);
 
-    listPushBack(list, pos1);
-    listPushBack(list, pos2);
-    listPushBack(list, pos3);
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listNotEmptyInsertIndexVariablePositions) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listNotEmptyInsertIndexVariablePositions) {
-    List *list = (List*)user_data_or_fixture;
-    char elems[] = {'a', 'b', 'c', 'z', 'i', 'p', 'k'};
-    size_t elemsCount = sizeof(elems) / sizeof(char);
+    const int valuesToInsert[] = {2, -7, 40, 99, 65000, -89555};
+    const size_t positionsToInsert[] = {1, 2, 0, 12, 14, 8};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, initialListSize);
 
-    char *elem = (char*)malloc(sizeof(char));
-    *elem = elems[1];
-    munit_assert_long(listInsertAtIndex(list, 1, elem), ==, LIST_OK);
-    elem = (char*)malloc(sizeof(char));
-    *elem = elems[4];
-    munit_assert_long(listInsertAtIndex(list, 3, elem), ==, LIST_OK);
-    elem = (char*)malloc(sizeof(char));
-    *elem = elems[2];
-    munit_assert_long(listInsertAtIndex(list, 2, elem), ==, LIST_OK);
-    elem = (char*)malloc(sizeof(char));
-    *elem = elems[5];
-    munit_assert_long(listInsertAtIndex(list, 5, elem), ==, LIST_OK);
-
-    munit_assert_ulong(listGetElementsCount(list), ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(current);
-        munit_assert_not_null(current->data);
-        char val = *((char*)current->data);
-
-        munit_assert_int(val, ==, elems[i]);
-
-        current = current->next;
+    for(size_t i = 0; i < valuesCount; ++i) {
+        int *elem = malloc(sizeof(int));
+        *elem = valuesToInsert[i];
+        munit_assert_long(listInsertAtIndex(list, positionsToInsert[i], elem), ==, MUNIT_OK);
     }
 
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedSize);
 }
 
 // ============
