@@ -25,6 +25,7 @@ DECLARE_TEARDOWN_FUNC(listEmptyStubTd);
 DECLARE_SETUP_FUNC(listSingleElement);
 DECLARE_TEARDOWN_FUNC(listSingleElement);
 
+// Tear down does not destroy list (for those test which need destroying the list)
 DECLARE_SETUP_FUNC(listSingleElementStubTd);
 DECLARE_TEARDOWN_FUNC(listSingleElementStubTd);
 
@@ -40,6 +41,7 @@ DECLARE_TEARDOWN_FUNC(listSingleElementStubTd);
 DECLARE_SETUP_FUNC(listFewElements);
 DECLARE_TEARDOWN_FUNC(listFewElements);
 
+// Tear down does not destroy list (for those test which need destroying the list)
 DECLARE_SETUP_FUNC(listFewElementsStubTd);
 DECLARE_TEARDOWN_FUNC(listFewElementsStubTd);
 
@@ -55,6 +57,7 @@ DECLARE_TEARDOWN_FUNC(listFewElementsStubTd);
 DECLARE_SETUP_FUNC(listLargeAmountElementsRandomValue);
 DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValue);
 
+// Tear down does not destroy list (for those test which need destroying the list)
 DECLARE_SETUP_FUNC(listLargeAmountElementsRandomValueStubTd);
 DECLARE_TEARDOWN_FUNC(listLargeAmountElementsRandomValueStubTd);
 
