@@ -114,7 +114,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsertIndex, listEmpty) {
 
 // ============
 
-DEFINE_FULL_TEST_FUNC(listNotEmptyInsertIndexVariablePositions, listFewElements) {
+DEFINE_FULL_TEST_FUNC(listInsertIndexVariablePositions, listFewElements) {
     List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
     const size_t initialListSize = *((size_t*)FIXTURE_INDEX(user_data_or_fixture, 2));
 
@@ -204,7 +204,7 @@ static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listPushBack-emptyList", listEmptyPushBack),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-emptyList", listEmptyInsert),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-emptyList", listEmptyInsertIndex),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-notEmptyList", listNotEmptyInsertIndexVariablePositions),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-notEmptyList", listInsertIndexVariablePositions),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-largeAmount", listInsertIndexLargeAmount),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-invalidPosition", listInsertIndexInInvalidPosition),
 
