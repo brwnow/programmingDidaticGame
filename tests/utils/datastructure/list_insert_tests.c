@@ -59,6 +59,28 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushFront, listEmpty) {
     return compareListToArrayInt(list, expectedResult, expectedSize);
 }
 
+DEFINE_FULL_TEST_FUNC(listPushFront, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialListSize = *((size_t*)FIXTURE_INDEX(user_data_or_fixture, 2));
+
+    const int expectedResult[] = {-4585, 0, 111, 54685, -89, 3, 27, 500, 4, 9, 0, 10, 3, 99, -250000, 999999, -7, 888, 50, 42};
+    const size_t expectedSize = sizeof(expectedResult) / sizeof(int);
+
+    const int valuesToInsert[] = {9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, initialListSize);
+
+    for(size_t i = 0; i < valuesCount; ++i) {
+        int *elem = (int*)malloc(sizeof(int));
+        *elem = valuesToInsert[i];
+        munit_assert_long(listPushFront(list, elem), ==, LIST_OK);
+    }
+
+    return compareListToArrayInt(list, expectedResult, expectedSize);
+}
+
 // ============
 
 DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmpty) {
@@ -81,6 +103,30 @@ DEFINE_FULL_TEST_FUNC(listEmptyPushBack, listEmpty) {
 
 // ============
 
+DEFINE_FULL_TEST_FUNC(listPushBack, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialListSize = *((size_t*)FIXTURE_INDEX(user_data_or_fixture, 2));
+
+    const int expectedResult[] = {0, 10, 3, 99, -250000, 999999, -7, 888, 50, 42, 9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
+    const size_t expectedSize = sizeof(expectedResult) / sizeof(int);
+
+    const int valuesToInsert[] = {9, 4, 500, 27, 3, -89, 54685, 111, 0, -4585};
+    const size_t valuesCount = sizeof(valuesToInsert) / sizeof(int);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, initialListSize);
+
+    for(size_t i = 0; i < valuesCount; ++i) {
+        int *elem = (int*)malloc(sizeof(int));
+        *elem = valuesToInsert[i];
+        munit_assert_long(listPushBack(list, elem), ==, LIST_OK);
+    }
+
+    return compareListToArrayInt(list, expectedResult, expectedSize);
+}
+
+// ============
+
 DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
@@ -90,6 +136,57 @@ DEFINE_FULL_TEST_FUNC(listEmptyInsert, listEmpty) {
     munit_assert_long(listInsert(NULL, LIST_BEFORE, NULL), ==, LIST_FAIL);
 
     return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listInsert, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialListSize = *((size_t*)FIXTURE_INDEX(user_data_or_fixture, 2));
+
+    const int expectedResult[] = {-500, 0, 400, 10, 3, 99, -950, -250000, 951, 999999, -7, 888, 50, 7, 42, 13};
+    const size_t expectedSize = sizeof(expectedResult) / sizeof(int);
+
+    const int valuesToInsert[] = {400, -500, 7, 13, -950, 951};
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, initialListSize);
+
+    ListIterator *it = createIterator(NULL, list->firstNode);
+
+    int *elem = malloc(sizeof(int));
+    *elem = valuesToInsert[0];
+    munit_assert_long(listInsert(it, LIST_AFTER, elem), ==, LIST_OK);
+
+    elem = malloc(sizeof(int));
+    *elem = valuesToInsert[1];
+    munit_assert_long(listInsert(it, LIST_BEFORE, elem), ==, LIST_OK);
+
+    free(it);
+    it = createIterator(NULL, list->lastNode);
+
+    elem = malloc(sizeof(int));
+    *elem = valuesToInsert[2];
+    munit_assert_long(listInsert(it, LIST_BEFORE, elem), ==, LIST_OK);
+
+    elem = malloc(sizeof(int));
+    *elem = valuesToInsert[3];
+    munit_assert_long(listInsert(it, LIST_AFTER, elem), ==, LIST_OK);
+
+    free(it);
+    it = createIterator(NULL, list->firstNode->next->next->next->next->next->next);
+
+    elem = malloc(sizeof(int));
+    *elem = valuesToInsert[4];
+    munit_assert_long(listInsert(it, LIST_BEFORE, elem), ==, LIST_OK);
+
+    elem = malloc(sizeof(int));
+    *elem = valuesToInsert[5];
+    munit_assert_long(listInsert(it, LIST_AFTER, elem), ==, LIST_OK);
+
+    free(it);
+
+    return compareListToArrayInt(list, expectedResult, expectedSize);
 }
 
 // ============
@@ -201,8 +298,11 @@ static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-nullPtr", listInsertNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-nullPtr", listInsertIndexNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPushFront-emptyList", listEmptyPushFront),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushFront-notEmptyList", listPushFront),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPushBack-emptyList", listEmptyPushBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPushBack-notEmptyList", listPushBack),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-emptyList", listEmptyInsert),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listInsert-notEmptyList", listInsert),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-emptyList", listEmptyInsertIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-notEmptyList", listInsertIndexVariablePositions),
     GET_TEST_FUNC_ARRAY_ENTRY("/listInsertAtIndex-largeAmount", listInsertIndexLargeAmount),
