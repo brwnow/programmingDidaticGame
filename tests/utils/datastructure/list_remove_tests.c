@@ -21,7 +21,7 @@ DEFINE_STANDALONE_TEST_FUNC(listPopBackNullPtr) {
 
 // ============
 
-DEFINE_STANDALONE_TEST_FUNC(listRemoveNullPtr) {
+DEFINE_STANDALONE_TEST_FUNC(listRemoveIndexNullPtr) {
     munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
 
     return MUNIT_OK;
@@ -63,7 +63,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmpty) {
 
 // ============
 
-DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmpty) {
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveIndex, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -129,7 +129,7 @@ DEFINE_FULL_TEST_FUNC(listPopBack, listFewElements) {
 
 // ============
 
-DEFINE_FULL_TEST_FUNC(listRemove, listFewElements) {
+DEFINE_FULL_TEST_FUNC(listRemoveIndex, listFewElements) {
     List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
     const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
@@ -225,17 +225,17 @@ DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listLargeAmountElementsRandomValue)
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-nullPtr", listPopFrontNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-nullPtr", listPopBackNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-nullPtr", listRemoveNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-nullPtr", listRemoveIndexNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-nullPtr", listRemoveAllNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-emptyList", listEmptyPopFront),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-emptyList", listEmptyPopBack),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-emptyList", listEmptyRemove),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-emptyList", listEmptyRemoveIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-emptyList", listEmptyRemoveAllElements),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-notEmptyList", listPopFront),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-notEmptyList", listPopBack),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-notEmptyList", listRemove),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-random", listRemoveRandom),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-invalidPosition", listRemoveInvalidPosition),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-notEmptyList", listRemoveIndex),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-random", listRemoveRandom),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-invalidPosition", listRemoveInvalidPosition),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-notEmptyList", listRemoveAllElements),
 
     TEST_FUNC_ARRAY_END
