@@ -197,7 +197,7 @@ unsigned long listGetElementsCount(List *list) {
 }
 
 ListResultCode listGetBegin(List *list, ListIterator **iterator) {
-    if(list == NULL)
+    if(list == NULL || iterator == NULL)
         return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
