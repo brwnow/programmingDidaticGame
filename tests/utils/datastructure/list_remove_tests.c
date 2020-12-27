@@ -37,15 +37,7 @@ DEFINE_STANDALONE_TEST_FUNC(listRemoveAllNullPtr) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyPopFront) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyPopFront) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmptyPopFront) {
+DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -58,15 +50,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmptyPopFront) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyPopBack) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyPopBack) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmptyPopBack) {
+DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -79,15 +63,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmptyPopBack) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyRemove) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyRemove) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmptyRemove) {
+DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -100,15 +76,7 @@ DEFINE_FULL_TEST_FUNC(listEmptyRemove, listEmptyRemove) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listEmptyRemoveAllElements) {
-    return listCreate();
-}
-
-DECLARE_TEARDOWN_FUNC(listEmptyRemoveAllElements) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmptyRemoveAllElements) {
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
@@ -121,176 +89,76 @@ DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmptyRemoveAllElements) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listPopFront) {
-    List *list = listCreate();
-    int elems[] = {20, 35, 59, -85, 1, 289, 999999};
+DEFINE_FULL_TEST_FUNC(listPopFront, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+    const size_t numberOfRemoves = 3UL;
 
-    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
-        int *elem = malloc(sizeof(int));
-        *elem = elems[i];
-        listPushBack(list, elem);
-    }
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listPopFront) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listPopFront, listPopFront) {
-    List *list = (List*)user_data_or_fixture;
-    int remainingElems[] = {-85, 1, 289, 999999};
-    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
-    const size_t numberOfRemoves = 3;
+    const int *expectedResult = (int*)FIXTURE_INDEX(user_data_or_fixture, 1) + numberOfRemoves;
+    const size_t expectedArraySize = initialArraySize - numberOfRemoves;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 7UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listPopFront(list), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(current);
-        munit_assert_not_null(current->data);
-        int val = *((int*)(current->data));
-
-        munit_assert_int(val, ==, remainingElems[i]);
-
-        current = current ->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedArraySize);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listPopBack) {
-    List *list = listCreate();
-    int elems[] = {20, 35, 59, -85, 1, 289, 999999};
+DEFINE_FULL_TEST_FUNC(listPopBack, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+    const size_t numberOfRemoves = 3UL;
 
-    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
-        int *elem = malloc(sizeof(int));
-        *elem = elems[i];
-        listPushBack(list, elem);
-    }
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listPopBack) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listPopBack, listPopBack) {
-    List *list = (List*)user_data_or_fixture;
-    int remainingElems[] = {20, 35, 59, -85};
-    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
-    const size_t numberOfRemoves = 3;
+    const int *expectedResult = (int*)FIXTURE_INDEX(user_data_or_fixture, 1);
+    const size_t expectedArraySize = initialArraySize - numberOfRemoves;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 7UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listPopBack(list), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(current);
-        munit_assert_not_null(current->data);
-        int val = *((int*)(current->data));
-
-        munit_assert_int(val, ==, remainingElems[i]);
-
-        current = current ->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedArraySize);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listRemove) {
-    List *list = listCreate();
-    int elems[] = {20, 35, 59, -85, 1, 289, 999999, -456888, 0, 2, 4, 6, 8, 7, 3, 5};
+DEFINE_FULL_TEST_FUNC(listRemove, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
-    for(size_t i = 0; i < sizeof(elems) / sizeof(int); ++i) {
-        int *elem = malloc(sizeof(int));
-        *elem = elems[i];
-        listPushBack(list, elem);
-    }
+    const int expectedResult[] = {10, 3, -7, 50};
+    const size_t expectedArraySize = sizeof(expectedResult) / sizeof(int);
 
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listRemove) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listRemove, listRemove) {
-    List *list = (List*)user_data_or_fixture;
-    int remainingElems[] = {35, -85, 289, -456888, 2, 4, 6, 8, 3};
-    const size_t elemsCount = sizeof(remainingElems) / sizeof(int);
-    size_t indexesToRemove[] = {15, 0, 3, 1, 5, 3, 8};
+    const size_t indexesToRemove[] = {9, 0, 2, 3, 4, 2};
     const size_t numberOfRemoves = sizeof(indexesToRemove) / sizeof(size_t);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 16UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listRemoveFromIndex(list, indexesToRemove[i]), ==, LIST_OK);
     }
 
-    munit_assert_ulong(list->elementsCount, ==, elemsCount);
-
-    Node *current = list->firstNode;
-
-    for(size_t i = 0; i < elemsCount; ++i) {
-        munit_assert_not_null(current);
-        munit_assert_not_null(current->data);
-        int val = *((int*)(current->data));
-
-        munit_assert_int(val, ==, remainingElems[i]);
-
-        current = current ->next;
-    }
-
-    return MUNIT_OK;
+    return compareListToArrayInt(list, expectedResult, expectedArraySize);
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listRemoveRandom) {
-    List *list = listCreate();
-    const size_t listElemsCount = 25000;
-
-    for(size_t i = 0; i < listElemsCount; ++i) {
-        listPushBack(list, malloc(sizeof(int)));
-    }
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listRemoveRandom) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listRemoveRandom, listRemoveRandom) {
-    List *list = (List*)user_data_or_fixture;
+DEFINE_FULL_TEST_FUNC(listRemoveRandom, listLargeAmountElementsRandomValue) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 25000UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
-    for(size_t i = 0; i < 25000; ++i) {
+    for(size_t i = 0; i < initialArraySize; ++i) {
         int removeMethod = munit_rand_int_range(0, 4);
         unsigned long position = (unsigned long)munit_rand_int_range(0, (int)(list->elementsCount) - 1);
         ListResultCode ret = LIST_FAIL;
@@ -322,55 +190,27 @@ DEFINE_FULL_TEST_FUNC(listRemoveRandom, listRemoveRandom) {
 
 // ============
 
-DECLARE_SETUP_FUNC(listRemoveInvalidPosition) {
-    List *list = listCreate();
-    const size_t listElemsCount = 3;
-
-    for(size_t i = 0; i < listElemsCount; ++i) {
-        listPushBack(list, malloc(sizeof(int)));
-    }
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listRemoveInvalidPosition) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listRemoveInvalidPosition) {
-    List *list = (List*)user_data_or_fixture;
+DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 3UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
-    munit_assert_long(listRemoveFromIndex(list, 4UL), ==, LIST_OUT_OF_BOUNDS);
-    munit_assert_ulong(list->elementsCount, ==, 3UL);
+    munit_assert_long(listRemoveFromIndex(list, initialArraySize), ==, LIST_OUT_OF_BOUNDS);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
     return MUNIT_OK;
 }
 
 // ============
 
-DECLARE_SETUP_FUNC(listRemoveAllElements) {
-    List *list = listCreate();
-    const size_t listElemsCount = 75000;
-
-    for(size_t i = 0; i < listElemsCount; ++i) {
-        listPushBack(list, malloc(sizeof(int)));
-    }
-
-    return list;
-}
-
-DECLARE_TEARDOWN_FUNC(listRemoveAllElements) {
-    listDestroy((List*)fixture);
-}
-
-DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listRemoveAllElements) {
-    List *list = (List*)user_data_or_fixture;
+DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listLargeAmountElementsRandomValue) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 75000UL);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
 
     munit_assert_long(listRemoveAll(list), ==, LIST_OK);
     munit_assert_ulong(list->elementsCount, ==, 0UL);
