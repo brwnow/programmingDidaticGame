@@ -187,6 +187,114 @@ DEFINE_FULL_TEST_FUNC(listFindElement, listFewElements) {
     return MUNIT_OK;
 }
 
+// ============
+
+DEFINE_STANDALONE_TEST_FUNC(listMoveNextNullPtr) {
+    munit_assert_long(listMoveNext(NULL), ==, LIST_FAIL);
+
+    ListIterator *iterator = createIterator(NULL, NULL);
+    munit_assert_long(listMoveNext(iterator), ==, LIST_FAIL);
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listMoveNextReachEnd, listSingleElement) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    ListIterator *iterator = createIterator(list->lastNode->data, list->lastNode);
+
+    if(iterator == NULL)
+        return MUNIT_ERROR;
+
+    munit_assert_long(listMoveNext(iterator), ==, LIST_ITERATOR_END_REACHED);
+    munit_assert_not_null(iterator->data);
+    munit_assert_ptr_equal(iterator->data, list->lastNode->data);
+    munit_assert_not_null(iterator->currentNode);
+    munit_assert_ptr_equal(iterator->currentNode, list->lastNode);
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listMoveNext, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const int *setupArray = (int*)FIXTURE_INDEX(user_data_or_fixture, 1);
+    const size_t setupArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+    ListIterator *iterator = createIterator(list->firstNode->data, list->firstNode);
+
+    if(iterator == NULL)
+        return MUNIT_ERROR;
+
+    for(size_t i = 1; i < setupArraySize; ++i) {
+        munit_assert_long(listMoveNext(iterator), ==, LIST_OK);
+        munit_assert_not_null(iterator->data);
+        munit_assert_not_null(iterator->currentNode);
+        munit_assert_int(setupArray[i], ==, *(int*)(iterator->data));
+    }
+
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_STANDALONE_TEST_FUNC(listMoveBackNullPtr) {
+    munit_assert_long(listMoveBack(NULL), ==, LIST_FAIL);
+
+    ListIterator *iterator = createIterator(NULL, NULL);
+    munit_assert_long(listMoveBack(iterator), ==, LIST_FAIL);
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listMoveBackReachEnd, listSingleElement) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    ListIterator *iterator = createIterator(list->firstNode->data, list->firstNode);
+
+    if(iterator == NULL)
+        return MUNIT_ERROR;
+
+    munit_assert_long(listMoveBack(iterator), ==, LIST_ITERATOR_BEGIN_REACHED);
+    munit_assert_not_null(iterator->data);
+    munit_assert_ptr_equal(iterator->data, list->firstNode->data);
+    munit_assert_not_null(iterator->currentNode);
+    munit_assert_ptr_equal(iterator->currentNode, list->firstNode);
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listMoveBack, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const int *setupArray = (int*)FIXTURE_INDEX(user_data_or_fixture, 1);
+    const size_t setupArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+    ListIterator *iterator = createIterator(list->lastNode->data, list->lastNode);
+
+    if(iterator == NULL)
+        return MUNIT_ERROR;
+
+    for(int i = setupArraySize - 2; i >= 0; --i) {
+        munit_assert_long(listMoveBack(iterator), ==, LIST_OK);
+        munit_assert_not_null(iterator->data);
+        munit_assert_not_null(iterator->currentNode);
+        munit_assert_int(setupArray[(size_t)i], ==, *(int*)(iterator->data));
+    }
+
+    free(iterator);
+
+    return MUNIT_OK;
+}
+
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetBegin-nullPtr", listGetBeginNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetBegin-emptyList", listGetBeginEmptyList),
@@ -202,6 +310,14 @@ static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listFindElement-emptyList", listFindElementEmptyList),
     GET_TEST_FUNC_ARRAY_ENTRY("/listFindElement-outOfBounds", listFindElementOutOfBounds),
     GET_TEST_FUNC_ARRAY_ENTRY("/listFindElement-fewElementsList", listFindElement),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveNext-nullPtr", listMoveNextNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveNext-endReached", listMoveNextReachEnd),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveNext-fewElementsList", listMoveNext),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveBack-nullPtr", listMoveBackNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveBack-endReached", listMoveBackReachEnd),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listMoveBack-fewElementsList", listMoveBack),
 
     TEST_FUNC_ARRAY_END
 };
