@@ -14,8 +14,9 @@ static inline void fillupListSubsuitesArray(void) {
     listSubsuites[0] = listCreateTestsGetSuite();
     listSubsuites[1] = listDestroyTestsGetSuite();
     listSubsuites[2] = listGetterTestsGetSuite();
-    listSubsuites[3] = listInsertTestsGetSuite();
-    listSubsuites[4] = listRemoveTestsGetSuite();
+    listSubsuites[3] = listFindTestsGetSuite();
+    listSubsuites[4] = listInsertTestsGetSuite();
+    listSubsuites[5] = listRemoveTestsGetSuite();
 }
 
 MunitSuite listTestsGetSuite(void) {

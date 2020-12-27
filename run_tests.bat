@@ -73,6 +73,7 @@ REM Tests compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_create_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_create_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_destroy_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_destroy_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_getter_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_getter_tests.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_find_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_find_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_insert_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_insert_tests.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c tests\utils\datastructure\list_remove_tests.c %TEST_INCLUDE_PATHS% %TEST_COMPILATION_PARAMS% -o build\tests\%BUILD_MODE%\list_remove_tests.o
 
@@ -86,6 +87,7 @@ set BUILD_OBJECTS_NEEDED_BY_TEST=   build\%BUILD_MODE%\log.o^
                                     build\tests\%BUILD_MODE%\list_create_tests.o^
                                     build\tests\%BUILD_MODE%\list_destroy_tests.o^
                                     build\tests\%BUILD_MODE%\list_getter_tests.o^
+                                    build\tests\%BUILD_MODE%\list_find_tests.o^
                                     build\tests\%BUILD_MODE%\list_insert_tests.o^
                                     build\tests\%BUILD_MODE%\list_remove_tests.o
 

@@ -4,7 +4,7 @@
 #include <munit.h>
 
 // Controls the amount of subsuites for list tests
-#define LIST_SUBSUITES_NUMBER 5
+#define LIST_SUBSUITES_NUMBER 6
 
 // Return a MunitSuite filled up with all list subsuites
 MunitSuite listTestsGetSuite(void);
@@ -12,6 +12,7 @@ MunitSuite listTestsGetSuite(void);
 MunitSuite listCreateTestsGetSuite(void);
 MunitSuite listDestroyTestsGetSuite(void);
 MunitSuite listGetterTestsGetSuite(void);
+MunitSuite listFindTestsGetSuite(void);
 MunitSuite listInsertTestsGetSuite(void);
 MunitSuite listRemoveTestsGetSuite(void);
 
