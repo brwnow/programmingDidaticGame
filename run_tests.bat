@@ -2,6 +2,12 @@
 
 set BUILD_CFG_FILE=build_config.bat
 
+REM Checking if build target was defined
+IF "%~1" == "" (
+    ECHO "ERROR: A build target (release|debug) must be passed as the first argument for run_tests script"
+    EXIT /B
+)
+
 REM Setting up local build configurations
 IF EXIST %BUILD_CFG_FILE% (
     CALL %BUILD_CFG_FILE%
