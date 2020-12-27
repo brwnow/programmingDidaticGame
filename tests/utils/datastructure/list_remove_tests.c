@@ -13,46 +13,6 @@ DEFINE_STANDALONE_TEST_FUNC(listPopFrontNullPtr) {
 
 // ============
 
-DEFINE_STANDALONE_TEST_FUNC(listPopBackNullPtr) {
-    munit_assert_long(listPopBack(NULL), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_STANDALONE_TEST_FUNC(listRemoveExNullPtr) {
-    munit_assert_long(listRemoveEx(NULL, NULL), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_STANDALONE_TEST_FUNC(listRemoveNullPtr) {
-    munit_assert_long(listRemove(NULL), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_STANDALONE_TEST_FUNC(listRemoveIndexNullPtr) {
-    munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_STANDALONE_TEST_FUNC(listRemoveAllNullPtr) {
-    munit_assert_long(listRemoveAll(NULL), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
 DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmpty) {
     List *list = (List*)user_data_or_fixture;
 
@@ -60,88 +20,6 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopFront, listEmpty) {
     munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listPopFront(list), ==, LIST_REMOVE_ALREADY_EMPTY);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmpty) {
-    List *list = (List*)user_data_or_fixture;
-
-    munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 0UL);
-
-    munit_assert_long(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listEmptyRemoveEx, listEmpty) {
-    List *list = (List*)user_data_or_fixture;
-
-    munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 0UL);
-
-    munit_assert_long(listRemoveEx(list, NULL), ==, LIST_REMOVE_ALREADY_EMPTY);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listRemoveExNodeNotOwnedByList, listFewElementsAndNodeNotOwnedByList) {
-    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
-    Node *nodeNotOwnedByList = (Node*)FIXTURE_INDEX(user_data_or_fixture, 3);
-
-    munit_assert_not_null(list);
-    munit_assert_not_null(nodeNotOwnedByList);
-    munit_assert_ptr_not_equal(list, nodeNotOwnedByList->parent);
-
-    munit_assert_long(listRemoveEx(list, nodeNotOwnedByList), ==, LIST_NODE_OWNERSHIP_ERROR);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listRemoveInvalidIterator, listEmpty) {
-    List *list = (List*)user_data_or_fixture;
-
-    munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 0UL);
-
-    ListIterator *iterator = createIterator(NULL, NULL);
-
-    munit_assert_long(listRemove(iterator), ==, LIST_FAIL);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listEmptyRemoveIndex, listEmpty) {
-    List *list = (List*)user_data_or_fixture;
-
-    munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 0UL);
-
-    munit_assert_long(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmpty) {
-    List *list = (List*)user_data_or_fixture;
-
-    munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, 0UL);
-
-    munit_assert_long(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -168,6 +46,27 @@ DEFINE_FULL_TEST_FUNC(listPopFront, listFewElements) {
 
 // ============
 
+DEFINE_STANDALONE_TEST_FUNC(listPopBackNullPtr) {
+    munit_assert_long(listPopBack(NULL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+
+    munit_assert_long(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
+
+    return MUNIT_OK;
+}
+
+// ============
+
 DEFINE_FULL_TEST_FUNC(listPopBack, listFewElements) {
     List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
     const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
@@ -184,6 +83,42 @@ DEFINE_FULL_TEST_FUNC(listPopBack, listFewElements) {
     }
 
     return compareListToArrayInt(list, expectedResult, expectedArraySize);
+}
+
+// ============
+
+DEFINE_STANDALONE_TEST_FUNC(listRemoveExNullPtr) {
+    munit_assert_long(listRemoveEx(NULL, NULL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listRemoveExNodeNotOwnedByList, listFewElementsAndNodeNotOwnedByList) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    Node *nodeNotOwnedByList = (Node*)FIXTURE_INDEX(user_data_or_fixture, 3);
+
+    munit_assert_not_null(list);
+    munit_assert_not_null(nodeNotOwnedByList);
+    munit_assert_ptr_not_equal(list, nodeNotOwnedByList->parent);
+
+    munit_assert_long(listRemoveEx(list, nodeNotOwnedByList), ==, LIST_NODE_OWNERSHIP_ERROR);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveEx, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+
+    munit_assert_long(listRemoveEx(list, NULL), ==, LIST_REMOVE_ALREADY_EMPTY);
+
+    return MUNIT_OK;
 }
 
 // ============
@@ -205,6 +140,29 @@ DEFINE_FULL_TEST_FUNC(listRemoveEx, listFewElements) {
     munit_assert_long(listRemoveEx(list, list->firstNode->next->next), ==, MUNIT_OK);
 
     return compareListToArrayInt(list, expectedResult, expectedArraySize);
+}
+
+// ============
+
+DEFINE_STANDALONE_TEST_FUNC(listRemoveNullPtr) {
+    munit_assert_long(listRemove(NULL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listRemoveInvalidIterator, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+
+    ListIterator *iterator = createIterator(NULL, NULL);
+
+    munit_assert_long(listRemove(iterator), ==, LIST_FAIL);
+
+    return MUNIT_OK;
 }
 
 // ============
@@ -245,6 +203,42 @@ DEFINE_FULL_TEST_FUNC(listRemove, listFewElements) {
     free(iterator);
 
     return compareListToArrayInt(list, expectedResult, expectedArraySize);
+}
+
+// ============
+
+DEFINE_STANDALONE_TEST_FUNC(listRemoveIndexNullPtr) {
+    munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
+
+    munit_assert_long(listRemoveFromIndex(list, initialArraySize), ==, LIST_OUT_OF_BOUNDS);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveIndex, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+
+    munit_assert_long(listRemoveFromIndex(list, 0UL), ==, LIST_REMOVE_ALREADY_EMPTY);
+
+    return MUNIT_OK;
 }
 
 // ============
@@ -310,15 +304,21 @@ DEFINE_FULL_TEST_FUNC(listRemoveRandom, listLargeAmountElementsRandomValue) {
 
 // ============
 
-DEFINE_FULL_TEST_FUNC(listRemoveInvalidPosition, listFewElements) {
-    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
-    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+DEFINE_STANDALONE_TEST_FUNC(listRemoveAllNullPtr) {
+    munit_assert_long(listRemoveAll(NULL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listEmptyRemoveAllElements, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
 
     munit_assert_not_null(list);
-    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
 
-    munit_assert_long(listRemoveFromIndex(list, initialArraySize), ==, LIST_OUT_OF_BOUNDS);
-    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
+    munit_assert_long(listRemoveAll(list), ==, LIST_REMOVE_ALREADY_EMPTY);
 
     return MUNIT_OK;
 }
@@ -344,25 +344,30 @@ DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listLargeAmountElementsRandomValue)
 
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-nullPtr", listPopFrontNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-nullPtr", listPopBackNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-nullPtr", listRemoveExNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-nullPtr", listRemoveNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-nullPtr", listRemoveIndexNullPtr),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-nullPtr", listRemoveAllNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-emptyList", listEmptyPopFront),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-emptyList", listEmptyPopBack),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-emptyList", listEmptyRemoveEx),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-nodeNotOwnedByList", listRemoveExNodeNotOwnedByList),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-invalidIterator", listRemoveInvalidIterator),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-emptyList", listEmptyRemoveIndex),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-emptyList", listEmptyRemoveAllElements),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-notEmptyList", listPopFront),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-nullPtr", listPopBackNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-emptyList", listEmptyPopBack),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-notEmptyList", listPopBack),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-nullPtr", listRemoveExNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-nodeNotOwnedByList", listRemoveExNodeNotOwnedByList),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-emptyList", listEmptyRemoveEx),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveEx-notEmptyList", listRemoveEx),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-nullPtr", listRemoveNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-invalidIterator", listRemoveInvalidIterator),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-notEmptyList", listRemove),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-nullPtr", listRemoveIndexNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-invalidPosition", listRemoveInvalidPosition),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-emptyList", listEmptyRemoveIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-notEmptyList", listRemoveIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-random", listRemoveRandom),
-    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-invalidPosition", listRemoveInvalidPosition),
+
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-nullPtr", listRemoveAllNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-emptyList", listEmptyRemoveAllElements),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-notEmptyList", listRemoveAllElements),
 
     TEST_FUNC_ARRAY_END

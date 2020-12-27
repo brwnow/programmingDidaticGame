@@ -5,6 +5,22 @@
 #include "utils/datastructure/list_tests.h"
 #include "utils/datastructure/list_test_setups.h"
 
+DEFINE_STANDALONE_TEST_FUNC(createNodeNullParent) {
+    Node *node = createNode((void*)1UL,
+                            (Node*)2UL,
+                            (Node*)3UL,
+                            NULL);
+
+    munit_assert_null(node);
+
+    // For the case it failed and didn't returned null
+    destroyNode(node);
+
+    return MUNIT_OK;
+}
+
+// ============
+
 DEFINE_STANDALONE_TEST_FUNC(createNode) {
     Node *node = createNode((void*)1UL,
                             (Node*)2UL,
@@ -17,22 +33,6 @@ DEFINE_STANDALONE_TEST_FUNC(createNode) {
     munit_assert_ptr_equal(node->next, (void*)3UL);
     munit_assert_ptr_equal(node->parent, (void*)4UL);
 
-    destroyNode(node);
-
-    return MUNIT_OK;
-}
-
-// ============
-
-DEFINE_STANDALONE_TEST_FUNC(createNodeNullParent) {
-    Node *node = createNode((void*)1UL,
-                            (Node*)2UL,
-                            (Node*)3UL,
-                            NULL);
-
-    munit_assert_null(node);
-
-    // For the case it failed and didn't returned null
     destroyNode(node);
 
     return MUNIT_OK;
@@ -73,8 +73,8 @@ DEFINE_STANDALONE_TEST_FUNC(listCreate) {
 // =================
 
 static MunitTest listTests[] = {
-    GET_TEST_FUNC_ARRAY_ENTRY("/createNode", createNode),
     GET_TEST_FUNC_ARRAY_ENTRY("/createNode-nullParent", createNodeNullParent),
+    GET_TEST_FUNC_ARRAY_ENTRY("/createNode", createNode),
     GET_TEST_FUNC_ARRAY_ENTRY("/createIterator", createIterator),
     GET_TEST_FUNC_ARRAY_ENTRY("/listCreate", listCreate),
 

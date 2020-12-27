@@ -295,6 +295,10 @@ DEFINE_FULL_TEST_FUNC(listMoveBack, listFewElements) {
     return MUNIT_OK;
 }
 
+// =================
+// == TEST ARRAYS ==
+// =================
+
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetBegin-nullPtr", listGetBeginNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listGetBegin-emptyList", listGetBeginEmptyList),

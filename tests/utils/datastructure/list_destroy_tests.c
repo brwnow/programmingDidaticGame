@@ -11,6 +11,8 @@ DEFINE_STANDALONE_TEST_FUNC(listDestroyNullPtr) {
     return MUNIT_OK;
 }
 
+// ============
+
 DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listEmptyStubTd) {
     List *list = user_data_or_fixture;
 
@@ -23,6 +25,8 @@ DEFINE_FULL_TEST_FUNC(listDestroyEmpty, listEmptyStubTd) {
 
     return MUNIT_OK;
 }
+
+// ============
 
 DEFINE_FULL_TEST_FUNC(listDestroySingleElement, listSingleElementStubTd) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
@@ -37,6 +41,8 @@ DEFINE_FULL_TEST_FUNC(listDestroySingleElement, listSingleElementStubTd) {
     return MUNIT_OK;
 }
 
+// ============
+
 DEFINE_FULL_TEST_FUNC(listDestroyFewElements, listFewElementsStubTd) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
 
@@ -49,6 +55,8 @@ DEFINE_FULL_TEST_FUNC(listDestroyFewElements, listFewElementsStubTd) {
 
     return MUNIT_OK;
 }
+
+// ============
 
 DEFINE_FULL_TEST_FUNC(listDestroyLargeAmountRandom, listLargeAmountElementsRandomValueStubTd) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);

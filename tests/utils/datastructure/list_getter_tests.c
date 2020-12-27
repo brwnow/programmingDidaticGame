@@ -11,6 +11,8 @@ DEFINE_STANDALONE_TEST_FUNC(listGetElementsCountNullPtr) {
     return MUNIT_OK;
 }
 
+// ============
+
 DEFINE_FULL_TEST_FUNC(listGetElementsCountEmpty, listEmpty) {
     List *list = user_data_or_fixture;
 
@@ -19,6 +21,8 @@ DEFINE_FULL_TEST_FUNC(listGetElementsCountEmpty, listEmpty) {
 
     return MUNIT_OK;
 }
+
+// ============
 
 DEFINE_FULL_TEST_FUNC(listGetElementsCountSingleElement, listSingleElement) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
@@ -29,6 +33,8 @@ DEFINE_FULL_TEST_FUNC(listGetElementsCountSingleElement, listSingleElement) {
     return MUNIT_OK;
 }
 
+// ============
+
 DEFINE_FULL_TEST_FUNC(listGetElementsCountFewElements, listFewElements) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
     const size_t numberOfElements = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
@@ -38,6 +44,8 @@ DEFINE_FULL_TEST_FUNC(listGetElementsCountFewElements, listFewElements) {
 
     return MUNIT_OK;
 }
+
+// ============
 
 DEFINE_FULL_TEST_FUNC(listGetElementsCountLargeAmountRandom, listLargeAmountElementsRandomValue) {
     List *list = FIXTURE_INDEX(user_data_or_fixture, 0);
