@@ -212,7 +212,7 @@ ListResultCode listGetBegin(List *list, ListIterator **iterator) {
 }
 
 ListResultCode listGetEnd(List *list, ListIterator **iterator) {
-    if(list == NULL)
+    if(list == NULL || iterator == NULL)
         return LIST_FAIL;
 
     if(list->elementsCount == 0UL)
@@ -227,7 +227,7 @@ ListResultCode listGetEnd(List *list, ListIterator **iterator) {
 }
 
 ListResultCode listFindElement(List *list, unsigned long position, ListIterator **iterator) {
-    if(list == NULL)
+    if(list == NULL || iterator == NULL)
         return LIST_FAIL;
 
     if(position >= list->elementsCount)
