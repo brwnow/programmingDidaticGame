@@ -21,6 +21,14 @@ DEFINE_STANDALONE_TEST_FUNC(listPopBackNullPtr) {
 
 // ============
 
+DEFINE_STANDALONE_TEST_FUNC(listRemoveNullPtr) {
+    munit_assert_long(listRemove(NULL), ==, LIST_FAIL);
+
+    return MUNIT_OK;
+}
+
+// ============
+
 DEFINE_STANDALONE_TEST_FUNC(listRemoveIndexNullPtr) {
     munit_assert_long(listRemoveFromIndex(NULL, 0UL), ==, LIST_FAIL);
 
@@ -57,6 +65,21 @@ DEFINE_FULL_TEST_FUNC(listEmptyPopBack, listEmpty) {
     munit_assert_ulong(list->elementsCount, ==, 0UL);
 
     munit_assert_long(listPopBack(list), ==, LIST_REMOVE_ALREADY_EMPTY);
+
+    return MUNIT_OK;
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listRemoveInvalidIterator, listEmpty) {
+    List *list = (List*)user_data_or_fixture;
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, 0UL);
+
+    ListIterator *iterator = createIterator(NULL, NULL);
+
+    munit_assert_long(listRemove(iterator), ==, LIST_FAIL);
 
     return MUNIT_OK;
 }
@@ -123,6 +146,46 @@ DEFINE_FULL_TEST_FUNC(listPopBack, listFewElements) {
     for(size_t i = 0; i < numberOfRemoves; ++i) {
         munit_assert_long(listPopBack(list), ==, LIST_OK);
     }
+
+    return compareListToArrayInt(list, expectedResult, expectedArraySize);
+}
+
+// ============
+
+DEFINE_FULL_TEST_FUNC(listRemove, listFewElements) {
+    List *list = (List*)FIXTURE_INDEX(user_data_or_fixture, 0);
+    const size_t initialArraySize = *(size_t*)FIXTURE_INDEX(user_data_or_fixture, 2);
+
+    const int expectedResult[] = {10, 3, 999999, 888, 50};
+    const size_t expectedArraySize = sizeof(expectedResult) / sizeof(int);
+
+    munit_assert_not_null(list);
+    munit_assert_ulong(list->elementsCount, ==, initialArraySize);
+
+    ListIterator *iterator = createIterator(NULL, list->firstNode);
+    munit_assert_long(listRemove(iterator), ==, LIST_OK);
+
+    free(iterator);
+
+    iterator = createIterator(NULL, list->lastNode);
+    munit_assert_long(listRemove(iterator), ==, LIST_OK);
+
+    free(iterator);
+
+    iterator = createIterator(NULL, list->firstNode->next->next);
+    munit_assert_long(listRemove(iterator), ==, LIST_OK);
+
+    free(iterator);
+
+    iterator = createIterator(NULL, list->firstNode->next->next->next->next);
+    munit_assert_long(listRemove(iterator), ==, LIST_OK);
+
+    free(iterator);
+
+    iterator = createIterator(NULL, list->lastNode->prev->prev->prev);
+    munit_assert_long(listRemove(iterator), ==, LIST_OK);
+
+    free(iterator);
 
     return compareListToArrayInt(list, expectedResult, expectedArraySize);
 }
@@ -225,14 +288,17 @@ DEFINE_FULL_TEST_FUNC(listRemoveAllElements, listLargeAmountElementsRandomValue)
 static MunitTest listTests[] = {
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-nullPtr", listPopFrontNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-nullPtr", listPopBackNullPtr),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-nullPtr", listRemoveNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-nullPtr", listRemoveIndexNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-nullPtr", listRemoveAllNullPtr),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-emptyList", listEmptyPopFront),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-emptyList", listEmptyPopBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-invalidIterator", listRemoveInvalidIterator),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-emptyList", listEmptyRemoveIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveAll-emptyList", listEmptyRemoveAllElements),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopFront-notEmptyList", listPopFront),
     GET_TEST_FUNC_ARRAY_ENTRY("/listPopBack-notEmptyList", listPopBack),
+    GET_TEST_FUNC_ARRAY_ENTRY("/listRemove-notEmptyList", listRemove),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-notEmptyList", listRemoveIndex),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-random", listRemoveRandom),
     GET_TEST_FUNC_ARRAY_ENTRY("/listRemoveFromIndex-invalidPosition", listRemoveInvalidPosition),
