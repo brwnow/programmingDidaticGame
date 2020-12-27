@@ -177,7 +177,7 @@ DEFINE_FULL_TEST_FUNC(listFindElement, listFewElements) {
     munit_assert_ulong(list->elementsCount, ==, setupArraySize);
 
     for(size_t i = 0; i < setupArraySize; ++i) {
-        munit_assert_long(listFindElement(list, i, &iterator), ==, MUNIT_OK);
+        munit_assert_long(listFindElement(list, i, &iterator), ==, LIST_OK);
         munit_assert_not_null(iterator);
         munit_assert_int(*((int*)iterator->data), ==, setupArray[i]);
 
