@@ -1,9 +1,9 @@
-#include "main.h"
+#include "core/main.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
 
-#include "utils/log.h"
+#include "utils/log/log.h"
 #include "core/video/video.h"
 #include "core/input/events.h"
 #include "core/input/keyboard.h"
