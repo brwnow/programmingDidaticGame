@@ -11,5 +11,8 @@ build_config.bat
 ## Local vscode settings dir
 .vscode/*
 
+## Generated documentation
+doc/generated
+
 ## Local personal files
 TODO.txt

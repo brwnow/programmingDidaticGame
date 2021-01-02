@@ -1,21 +1,47 @@
+/**
+ * @file list.h
+ * @brief List API
+ *
+ * API for list functions
+ * 
+ */
+
 #ifndef _DIDATIC_GAME_LIST_H_
 #define _DIDATIC_GAME_LIST_H_
 
 #include "definitions/global.h"
 
+/**
+ * List typedef for _List struct
+ * 
+ */
 typedef struct _List List;
+
+/**
+ * Node typedef for _Node struct
+ * 
+ */
 typedef struct _Node Node;
 
+/**
+ * Iterator for a List, useful for navigating the list. Also useful for inserting or
+ * deleting elements at its current position
+ * 
+ */
 typedef struct _ListIterator {
-    void *data;
-    Node *currentNode;
+    void *data; /**< Pointer the data at the current position */
+    Node *currentNode; /**< Pointer to current Node. Node has only private fields. */
 } ListIterator;
 
 /**
  * Result codes for list operations
+ * 
  * Codes smaller than 0 means ERROR
+ * 
  * Codes greater than 0 means WARNING
+ * 
  * 0 means OK
+ * 
  */
 typedef enum _ListResultCode {
 
@@ -46,6 +72,10 @@ typedef enum _ListResultCode {
 
 } ListResultCode;
 
+/**
+ * Relative position to a given node. Some operations need to know wheter to insert a node relative to the current one
+ * 
+ */
 typedef enum _ListRelativePosition {
     LIST_BEFORE, /**< Insert before current node */
     LIST_AFTER, /**< Insert after current node */
