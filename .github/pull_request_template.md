@@ -13,6 +13,7 @@ Example:
 # Checklist
 - [ ] Build the branch locally (debug and release) and run both targets  
 - [ ] Build the tests locally and run the tests  
-- [ ] Check if the branch in on top of develop  
-- [ ] Check if merge text  conforms the standard  
+- [ ] Check if the documentation must be updated and whether it was updated  
+- [ ] Check if the branch is on top of develop  
+- [ ] Check if merge text conforms the standard  
 - [ ] Reminder to delete branch after merging  
