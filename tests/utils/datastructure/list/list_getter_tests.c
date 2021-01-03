@@ -2,8 +2,8 @@
 
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_private.h"
-#include "utils/datastructure/list_tests.h"
-#include "utils/datastructure/list_test_setups.h"
+#include "utils/datastructure/list/list_tests.h"
+#include "utils/datastructure/list/list_test_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listGetElementsCountNullPtr) {
     munit_assert_ulong(listGetElementsCount(NULL), ==, 0UL);

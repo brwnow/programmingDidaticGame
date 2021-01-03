@@ -1,5 +1,6 @@
 #include "utils/log/log.h"
-#include "utils/datastructure/list_tests.h"
+
+#include "utils/datastructure/list/list_tests.h"
 #include "core/system/timer/timer_tests.h"
 
 #define TEST_SUITES_NUMBER 2
