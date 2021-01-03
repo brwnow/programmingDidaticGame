@@ -73,6 +73,7 @@ REM Game binary compilation
 %TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\input\keyboard.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\keyboard.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\video.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\video.o
 %TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\video\window.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\window.o
+%TOOLCHAIN_PATH%\%C_COMPILER% -c src\core\system\timer.c %BUILD_COMPILE_INCLUDE_PATHS% %BUILD_COMPILE_FLAGS% %BUILD_COMPILE_DEFINES% -o build\%BUILD_MODE%\timer.o
 
 REM Game binary linking
 %TOOLCHAIN_PATH%\%C_COMPILER%   build\%BUILD_MODE%\main.o^
@@ -82,6 +83,7 @@ REM Game binary linking
                                 build\%BUILD_MODE%\keyboard.o^
                                 build\%BUILD_MODE%\video.o^
                                 build\%BUILD_MODE%\window.o^
+                                build\%BUILD_MODE%\timer.o^
                                 -L%LIBSDL_PATH%\lib -L%LIBSDLTTF_PATH%\lib^
                                 -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf^
                                 %BUILD_LINKING_FLAGS%^

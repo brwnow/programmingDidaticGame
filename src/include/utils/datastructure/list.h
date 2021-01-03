@@ -12,21 +12,19 @@
 #include "definitions/global.h"
 
 /**
- * List typedef for _List struct
- * 
+ * @brief List typedef for _List struct
  */
 typedef struct _List List;
 
 /**
- * Node typedef for _Node struct
- * 
+ * @brief Node typedef for _Node struct
  */
 typedef struct _Node Node;
 
 /**
- * Iterator for a List, useful for navigating the list. Also useful for inserting or
- * deleting elements at its current position
+ * @brief Iterator for a List, useful for navigating the list.
  * 
+ * Also useful for inserting or deleting elements at its current position
  */
 typedef struct _ListIterator {
     void *data; /**< Pointer the data at the current position */
@@ -34,14 +32,11 @@ typedef struct _ListIterator {
 } ListIterator;
 
 /**
- * Result codes for list operations
+ * @brief Result codes for list operations
  * 
- * Codes smaller than 0 means ERROR
- * 
- * Codes greater than 0 means WARNING
- * 
- * 0 means OK
- * 
+ * Codes smaller than 0 means ERROR.
+ * Codes greater than 0 means WARNING.
+ * 0 means OK.
  */
 typedef enum _ListResultCode {
 
@@ -73,7 +68,9 @@ typedef enum _ListResultCode {
 } ListResultCode;
 
 /**
- * Relative position to a given node. Some operations need to know wheter to insert a node relative to the current one
+ * @brief Relative position to a given node.
+ * 
+ * Some operations need to know wheter to insert a node relative to the current one
  * 
  */
 typedef enum _ListRelativePosition {
