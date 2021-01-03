@@ -1,4 +1,4 @@
-#include "utils/datastructure/list_tests.h"
+#include "utils/datastructure/list/list_tests.h"
 
 static MunitSuite listSubsuites[LIST_SUBSUITES_NUMBER];
 

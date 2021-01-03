@@ -2,8 +2,8 @@
 
 #include "utils/datastructure/list.h"
 #include "utils/datastructure/list_private.h"
-#include "utils/datastructure/list_tests.h"
-#include "utils/datastructure/list_test_setups.h"
+#include "utils/datastructure/list/list_tests.h"
+#include "utils/datastructure/list/list_test_setups.h"
 
 DEFINE_STANDALONE_TEST_FUNC(listPopFrontNullPtr) {
     munit_assert_long(listPopFront(NULL), ==, LIST_FAIL);

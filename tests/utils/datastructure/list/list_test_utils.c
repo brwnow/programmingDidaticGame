@@ -1,4 +1,4 @@
-#include "utils/datastructure/list_test_utils.h"
+#include "utils/datastructure/list/list_test_utils.h"
 
 MunitResult compareListToArrayInt(const List *list, const int *array, size_t arraySize) {
     munit_assert_not_null(list);
